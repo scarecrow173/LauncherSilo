@@ -1,0 +1,261 @@
+﻿<Controls:MetroWindow x:Class="LauncherSilo.Views.ConfigView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:local="clr-namespace:LauncherSilo.Views"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:vm="clr-namespace:LauncherSilo.ViewModels"
+        xmlns:cnv="clr-namespace:LauncherSilo.Converter"
+        xmlns:selector="clr-namespace:LauncherSilo.TemplateSelecter"
+        xmlns:model="clr-namespace:LauncherSilo.Models"
+        xmlns:coremodel="clr-namespace:LauncherSilo.Core.Models;assembly=LauncherSilo.Core"
+        xmlns:ext="clr-namespace:LauncherSilo.Extension"
+        xmlns:app="clr-namespace:LauncherSilo"
+        xmlns:extk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+        mc:Ignorable="d"
+        DataContext="{x:Static app:App.MainVM}"
+        Icon="/LauncherSilo;component/Resources/RokcetIconSimpleBack.ico"
+        Title="設定" Height="600" Width="800"  Closing="Window_Closing" Loaded="Window_Loaded">
+    <Window.Resources>
+        <cnv:LauncherCommandConverter x:Key="LauncherCommandConverter" />
+        <ContextMenu x:Key="MenuNodeCcontext">
+            <MenuItem Header="追加" Command="{Binding ConfigVM.AddMenuNode}"/>
+            <MenuItem Header="カテゴリー追加" Command="{Binding ConfigVM.AddMenuCategoryNode}"/>
+            <MenuItem Header="削除" Command="{Binding ConfigVM.DeleteMenuNode}"/>
+        </ContextMenu>
+        <ContextMenu x:Key="MenuNodeTextBoxCcontext">
+            <MenuItem Header="追加" Command="{Binding AddMenuNode}"/>
+            <MenuItem Header="カテゴリー追加" Command="{Binding AddMenuCategoryNode}"/>
+            <MenuItem Header="削除" Command="{Binding DeleteMenuNode}"/>
+        </ContextMenu>
+        <ContextMenu x:Key="LauncherCommandContext">
+            <MenuItem Header="削除" Command="{Binding ConfigVM.DeleteLauncherCommand}" CommandParameter="{Binding ConfigVM.SelectedLauncherCommand}"/>
+        </ContextMenu>
+        <HierarchicalDataTemplate x:Key="MenuDataTemplate" ItemsSource="{Binding Children}">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding Path=IsVisible, Mode=TwoWay}"/>
+                <TextBox ContextMenu="{DynamicResource MenuNodeTextBoxCcontext}" Text="{Binding Path=Name, Mode=TwoWay}" IsHitTestVisible="{Binding IsItemSelected}" Margin="8,0">
+                </TextBox>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate x:Key="CategoryDataTemplate" ItemsSource="{Binding Children}">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding Path=IsVisible, Mode=TwoWay}"/>
+                <TextBlock Text="カテゴリー:" VerticalAlignment="Center" Margin="8,0"></TextBlock>
+                <TextBox ContextMenu="{DynamicResource MenuNodeTextBoxCcontext}" Text="{Binding Path=Name, Mode=TwoWay}" IsHitTestVisible="{Binding IsItemSelected}" Margin="8,0"></TextBox>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <DataTemplate x:Key="ErrorTab">
+            <Grid>
+                <TextBlock>Error</TextBlock>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="GeneralTab">
+            <DockPanel >
+                <GroupBox DockPanel.Dock="Top" VerticalAlignment="Top" Margin="2" Header="プログラム設定">
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox Margin="4" Content="スタートアップへ登録" IsChecked="{Binding ConfigVM.IsStartup}"></CheckBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox Margin="4" Content="即時実行" IsChecked="{Binding ConfigVM.IsGeneralImmediately}"></CheckBox>
+                            <CheckBox Margin="4" Content="クリップボードへコピー" IsChecked="{Binding ConfigVM.IsCopyToClipboard}"></CheckBox>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="4">
+                            <StackPanel Orientation="Vertical">
+                                <RadioButton Content="コンテキストメニュー" Margin="4" IsChecked="{Binding ConfigVM.IsLayoutStyleContextMenu}"></RadioButton>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical">
+                                <RadioButton Content="ボタンタイル" Margin="4" IsChecked="{Binding ConfigVM.IsLayoutStyleTileButton}"></RadioButton>
+                                <StackPanel  Orientation="Horizontal">
+                                    <TextBlock Text="横タイル数" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding ConfigVM.IsLayoutStyleTileButton}" ></TextBlock>
+                                    <extk:IntegerUpDown Margin="4" Minimum="16" Value="{Binding ConfigVM.HorizonalTileSize}" IsEnabled="{Binding ConfigVM.IsLayoutStyleTileButton}" Foreground="{DynamicResource AccentSelectedColorBrush}"></extk:IntegerUpDown>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox DockPanel.Dock="Top" VerticalAlignment="Top" Margin="2" Header="ショートカットキー設定">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Margin="2">
+                            <CheckBox Content="Alt" IsChecked="{Binding ConfigVM.IsUseAltKey}"></CheckBox>
+                            <CheckBox Content="Shift" IsChecked="{Binding ConfigVM.IsUseShiftKey}"></CheckBox>
+                            <CheckBox Content="Ctrl" IsChecked="{Binding ConfigVM.IsUseCtrlKey}"></CheckBox>
+                        </StackPanel>
+                        <TextBlock Text="+" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8"></TextBlock>
+                        <extk:WatermarkTextBox DockPanel.Dock="Left" Watermark="例)E" Text="{Binding ConfigVM.ShortcutKeyName}"  Margin="2" Width="60" HorizontalAlignment="Left" Foreground="{DynamicResource AccentSelectedColorBrush}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" PreviewKeyDown="WatermarkTextBox_PreviewKeyDown" PreviewTextInput="WatermarkTextBox_PreviewTextInput" TextInput="WatermarkTextBox_TextInput" TextChanged="WatermarkTextBox_TextChanged" ></extk:WatermarkTextBox>
+                    </DockPanel>
+                </GroupBox>
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="DisplayTab">
+            <DockPanel >
+                <GroupBox DockPanel.Dock="Left" Header="登録済みコマンド一覧" VerticalAlignment="Stretch" Margin="2">
+                    <ListView ItemsSource="{Binding ConfigVM.RegistedLauncherCommandInfos }" dd:DragDrop.IsDragSource="True">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="コマンド名" Width="100" DisplayMemberBinding="{Binding Path=Name}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
+                <GroupBox DockPanel.Dock="Bottom" Header="メニュー一覧" VerticalAlignment="Stretch" Margin="2">
+                    <TreeView ItemsSource="{Binding ConfigVM.RegistedMenuTreeNodes}" ContextMenu="{DynamicResource MenuNodeCcontext}" dd:DragDrop.IsDropTarget="True" dd:DragDrop.IsDragSource="True" dd:DragDrop.DropHandler="{Binding ConfigVM}" ItemTemplateSelector="{DynamicResource MenuNodeSelector}" >
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}">
+                                <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded, Mode=TwoWay}"/>
+                                <Setter Property="ext:TreeViewMultipleSelectionBehavior.IsItemSelected" Value="{Binding Path=IsItemSelected, Mode=TwoWay}"/>
+                                <Style.Triggers>
+                                    <Trigger Property="ext:TreeViewMultipleSelectionBehavior.IsItemSelected" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                        <i:Interaction.Behaviors>
+                            <ext:TreeViewMultipleSelectionBehavior SelectedItems="{Binding ConfigVM.SelectedMenuNodes, Mode=TwoWay}" />
+                        </i:Interaction.Behaviors>
+                    </TreeView>
+                </GroupBox>
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="RegisterLauncherCommandTab">
+            <DockPanel >
+                <GroupBox DockPanel.Dock="Top" Header="新規登録" VerticalAlignment="Top" Margin="2">
+                    <TabControl TabStripPlacement="Top">
+                        <TabItem Header="コマンド">
+                            <StackPanel Orientation="Vertical">
+                                <DockPanel Margin="2" LastChildFill="True">
+                                    <TextBlock Text="コマンド名" Width="60" HorizontalAlignment="Left"/>
+                                    <extk:WatermarkTextBox x:Name="NewLauncherCommandName" Watermark="例)ハローワールド" HorizontalContentAlignment="Stretch" Foreground="{DynamicResource AccentSelectedColorBrush}"/>
+                                </DockPanel>
+                                <DockPanel Margin="2" LastChildFill="True" >
+                                    <TextBlock Text="コマンド" Width="60" />
+                                    <extk:WatermarkTextBox x:Name="NewLauncherCommand" Watermark="例)command hello world" Foreground="{DynamicResource AccentSelectedColorBrush}"/>
+                                </DockPanel>
+                                <DockPanel Margin="2" LastChildFill="True" >
+                                    <TextBlock Text="説明" Width="60" />
+                                    <extk:WatermarkTextBox x:Name="NewLauncherCommandDescription" Watermark="例)hello worldコマンド" Foreground="{DynamicResource AccentSelectedColorBrush}"/>
+                                </DockPanel>
+                                <CheckBox x:Name="NewLauncherCommandIsImmediately" HorizontalAlignment="Right" Content="即時実行可能" />
+                                <Button Content="登録" Command="{Binding ConfigVM.RegisterNewLauncherCommand}" Margin="0,4">
+                                    <Button.Resources>
+                                        <coremodel:CommandExecuteType x:Key="TypeCommand">Command</coremodel:CommandExecuteType>
+                                    </Button.Resources>
+                                    <Button.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource LauncherCommandConverter}">
+                                            <MultiBinding.Bindings>
+                                                <Binding ElementName="NewLauncherCommandName" Path="Text" />
+                                                <Binding ElementName="NewLauncherCommand" Path="Text" />
+                                                <Binding ElementName="NewLauncherCommandDescription" Path="Text" />
+                                                <Binding ElementName="NewLauncherCommandIsImmediately" Path="IsChecked" />
+                                                <Binding Source="{StaticResource TypeCommand}"/>
+                                            </MultiBinding.Bindings>
+                                        </MultiBinding>
+                                    </Button.CommandParameter>
+                                </Button>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="ファイル">
+                            <StackPanel Orientation="Vertical">
+                                <DockPanel Margin="2" LastChildFill="True">
+                                    <TextBlock Text="コマンド名" Width="60" HorizontalAlignment="Left"/>
+                                    <extk:WatermarkTextBox x:Name="NewFileCommandName" Watermark="例)データリスト" HorizontalContentAlignment="Stretch" Foreground="{DynamicResource AccentSelectedColorBrush}"/>
+                                </DockPanel>
+                                <DockPanel Margin="2" LastChildFill="True" >
+                                    <TextBlock Text="ファイルパス" Width="60" />
+                                    <extk:WatermarkTextBox x:Name="NewFileCommand" Watermark="例)C:\sample.csv" Foreground="{DynamicResource AccentSelectedColorBrush}"/>
+                                </DockPanel>
+                                <DockPanel Margin="2" LastChildFill="True" >
+                                    <TextBlock Text="説明" Width="60" />
+                                    <extk:WatermarkTextBox x:Name="NewFileCommandDescription" Watermark="例)アイテムリストを開く" Foreground="{DynamicResource AccentSelectedColorBrush}"/>
+                                </DockPanel>
+                                <Button Content="登録" Command="{Binding ConfigVM.RegisterNewLauncherCommand}" Margin="0,4">
+                                    <Button.Resources>
+                                        <sys:Boolean x:Key="IsImmediately">true</sys:Boolean>
+                                        <coremodel:CommandExecuteType x:Key="TypeFileOpen">FileOpen</coremodel:CommandExecuteType>
+                                    </Button.Resources>
+                                    <Button.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource LauncherCommandConverter}">
+                                            <MultiBinding.Bindings>
+                                                <Binding ElementName="NewFileCommandName" Path="Text" />
+                                                <Binding ElementName="NewFileCommand" Path="Text" />
+                                                <Binding ElementName="NewLauncherCommandDescription" Path="Text" />
+                                                <Binding Source="{StaticResource IsImmediately}" />
+                                                <Binding Source="{StaticResource TypeFileOpen}"/>
+                                            </MultiBinding.Bindings>
+                                        </MultiBinding>
+                                    </Button.CommandParameter>
+                                </Button>
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
+                </GroupBox>
+                <GroupBox DockPanel.Dock="Bottom" Header="登録済みコマンド一覧" VerticalAlignment="Stretch" Margin="2">
+                    <ListView ItemsSource="{Binding ConfigVM.RegistedLauncherCommandInfos }" SelectedItem="{Binding ConfigVM.SelectedLauncherCommand }" ContextMenu="{DynamicResource LauncherCommandContext}" HorizontalContentAlignment="Stretch">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="コマンド名" Width="100">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Path=Name}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="コマンド" Width="auto">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Path=Command}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="即時実行">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <CheckBox IsChecked="{Binding Path=IsImmediately}" Margin="16,4,0,0" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="説明">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Path=Description}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="PluginConfigTab">
+            <Grid>
+                <local:PluginConfigView DataContext="{Binding PluginConfigVM}"/>
+            </Grid>
+        </DataTemplate>
+        <selector:MenuTreeNodeDataTemplateSelector x:Key="MenuNodeSelector" MenuTemplate="{StaticResource MenuDataTemplate}" CategoryTemplate="{StaticResource CategoryDataTemplate}" />
+        <selector:ConfigTabTemmplateSelector x:Key="ConfigTabSelector" ErrorTabTemplate="{StaticResource ErrorTab}" GeneralTabTemplate="{StaticResource GeneralTab}" DisplayTabTemplate="{StaticResource DisplayTab}" RegisterLauncherCommandTabTemplate="{StaticResource RegisterLauncherCommandTab}" PluginConfigTabTemplate="{StaticResource PluginConfigTab}"/>
+        <DataTemplate x:Key="ConfigTabItemHeaderTempalte">
+            <Grid>
+                <TextBlock Text="{Binding Header}"/>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Border BorderBrush="{DynamicResource HighlightBrush}"
+            BorderThickness="1" />
+        <DockPanel>
+            <Button DockPanel.Dock="Bottom" Margin="2" Content="保存" Command="{Binding ConfigVM.SaveConfig}"></Button>
+            <Button DockPanel.Dock="Bottom" Margin="2" Content="キャンセル" Command="{Binding ConfigVM.CancelConfig}"></Button>
+            <TabControl TabStripPlacement="Left" ItemsSource="{Binding ConfigVM.ConfigTabItems}" ContentTemplateSelector="{StaticResource ConfigTabSelector}" ItemTemplate="{StaticResource ConfigTabItemHeaderTempalte}">
+            </TabControl>
+        </DockPanel>
+    </Grid>
+</Controls:MetroWindow>

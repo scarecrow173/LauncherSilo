@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:LauncherSilo.FileFinderPlugin">
+    <ControlTemplate x:Key="FileFinderPluginConfigView">
+        <Grid>
+            <StackPanel  Orientation="Horizontal">
+                <CheckBox Margin="4" Content="ファイル検索を有効化" IsChecked="{Binding IsEnableFileFinder}"></CheckBox>
+            </StackPanel>
+        </Grid>
+    </ControlTemplate>
+</ResourceDictionary>
