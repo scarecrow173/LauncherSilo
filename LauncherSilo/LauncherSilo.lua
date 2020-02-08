@@ -55,7 +55,7 @@ project "LauncherSilo"
 
     postbuildcommands { 
         "xcopy /y /r \"$(SolutionDir)output_plugins\\*\" \"$(TargetDir)plugins\\\"",
-        "xcopy /y /r \"$(ProjectDir)config.xml\" \"$(TargetDir)\""
+        "if exist \"$(ProjectDir)config.xml\" ( xcopy /y /r \"$(ProjectDir)config.xml\" \"$(TargetDir)\")"
     }
 
     filter { "configurations:Debug" }

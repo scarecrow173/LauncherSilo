@@ -102,18 +102,27 @@ namespace LauncherSilo.AudioControllerPlugin
                     MaxDecibels,
                     MinDecibels);
                 try
-                {
-                    
-                    int ChannelCount = Device.AudioEndpointVolume.Channels.Count;
+                {                    
+                    int ChannelCount = Math.Max(Device.AudioEndpointVolume.Channels.Count, Device.AudioMeterInformation.PeakValues.Count);
                     _Master.Volume = Math.Round(Device.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0);
                     _Master.Peek = Device.AudioMeterInformation.MasterPeakValue;
                     _Channels = new ChannelViewModel[ChannelCount];
 
                     for (int iChannel = 0; iChannel < ChannelCount; ++iChannel)
                     {
-                        NAudio.CoreAudioApi.AudioEndpointVolumeChannel Channel = Device.AudioEndpointVolume.Channels[iChannel];
-                        _Channels[iChannel] = new ChannelViewModel(Math.Round(Channel.VolumeLevelScalar * 100.0), Device.AudioMeterInformation.PeakValues[iChannel]);
-                        Misc.LogStatics.Debug("\tCH:{0} Level={1} Scalar={2}", iChannel, Channel.VolumeLevel, Channel.VolumeLevelScalar);
+                        double ChVol = 0.0;
+                        double ChPeek = 0.0;
+                        if (iChannel < Device.AudioEndpointVolume.Channels.Count)
+                        {
+                            NAudio.CoreAudioApi.AudioEndpointVolumeChannel Channel = Device.AudioEndpointVolume.Channels[iChannel];
+                            ChVol = Math.Round(Channel.VolumeLevelScalar * 100.0);
+                            Misc.LogStatics.Debug("\tCH:{0} Level={1} Scalar={2}", iChannel, Channel.VolumeLevel, Channel.VolumeLevelScalar);
+                        }
+                        if (iChannel < Device.AudioEndpointVolume.Channels.Count)
+                        {
+                            ChPeek = Device.AudioMeterInformation.PeakValues[iChannel];
+                        }
+                        _Channels[iChannel] = new ChannelViewModel(ChVol, ChPeek);
                     }
                 }
                 catch (Exception ex)
@@ -122,8 +131,6 @@ namespace LauncherSilo.AudioControllerPlugin
                 }
                 try
                 {
-
-
                     Device.AudioEndpointVolume.OnVolumeNotification += AudioEndpointVolume_OnVolumeNotification;
                     PeekUpdateTimer.Elapsed += PeekUpdateTimer_Elapsed;
                     PeekUpdateTimer.Start();
