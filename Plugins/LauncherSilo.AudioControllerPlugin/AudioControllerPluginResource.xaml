@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:LauncherSilo.AudioControllerPlugin">
+                    xmlns:local="clr-namespace:LauncherSilo.AudioControllerPlugin"
+                    xmlns:audioControls="clr-namespace:LauncherSilo.AudioControllerPlugin.Controls;assembly=LauncherSilo.AudioControllerPlugin">
     <ControlTemplate x:Key="AudioControllerPluginConfigView">
         <Grid>
             <StackPanel Orientation="Vertical">
@@ -39,15 +40,21 @@
                                                             <GridViewColumn>
                                                                 <GridViewColumn.CellTemplate>
                                                                     <DataTemplate>
-                                                                        <StackPanel Orientation="Horizontal">
-                                                                            <Slider Value="{Binding Peek}" Maximum="1" Minimum="0" SmallChange="0.01" TickFrequency="0.1" IsMoveToPointEnabled="False" Width="100"/>
-                                                                            <TextBlock Text="{Binding DisplayPeek}" Margin="10,0,0,0"></TextBlock>
+                                                                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                                                            <!--Slider Value="{Binding Peek}" Maximum="1" Minimum="0" SmallChange="0.01" TickFrequency="0.1" IsMoveToPointEnabled="False" Width="100"/-->
+                                                                            <audioControls:LevelMeter Level="{Binding DisplayPeek}" MinLevel="0"  MaxLevel="100"></audioControls:LevelMeter>
+                                                                            <TextBlock TextAlignment="Center" Text="{Binding DisplayPeek}" Margin="0,0,0,0"></TextBlock>
                                                                         </StackPanel>
                                                                     </DataTemplate>
                                                                 </GridViewColumn.CellTemplate>
                                                             </GridViewColumn>
                                                         </GridView>
                                                     </ListView.View>
+                                                    <ListView.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel Orientation="Horizontal"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ListView.ItemsPanel>
                                                 </ListView>
                                             </StackPanel>
                                         </DataTemplate>

@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Resources;
 using System.Windows.Markup;
+using System.Windows.Input;
 
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -72,7 +73,7 @@ namespace LauncherSilo.AudioControllerPlugin
         {
             get
             {
-                return _Peek * 100.0;
+                return Math.Round(_Peek * 100.0);
             }
         }
 
@@ -327,6 +328,7 @@ namespace LauncherSilo.AudioControllerPlugin
             }
         }
         public AudioControllerPluginConfig SwitcherPluginConfig { get { return _PluginConfig as AudioControllerPluginConfig; } set { _PluginConfig = value; } }
+        //public ShowMeterCommand ShowMeter { get; private set; } = new ShowMeterCommand();
         NAudio.Wave.WasapiLoopbackCapture _capture = null;
         private NAudio.Wave.WaveFileWriter _waveFileWriter = null;
         private NAudio.CoreAudioApi.MMDevice DefaultRenderDevice = null;
@@ -346,15 +348,15 @@ namespace LauncherSilo.AudioControllerPlugin
                     {
                         NAudio.CoreAudioApi.MMDeviceEnumerator enumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
                         DefaultRenderDevice = enumerator.GetDefaultAudioEndpoint(NAudio.CoreAudioApi.DataFlow.Render, NAudio.CoreAudioApi.Role.Multimedia);
-                        _waveFileWriter = new NAudio.Wave.WaveFileWriter("recoded.wav", _capture.WaveFormat);
                         _capture = new NAudio.Wave.WasapiLoopbackCapture();
+                        _waveFileWriter = new NAudio.Wave.WaveFileWriter("recoded.wav", _capture.WaveFormat);
                         _capture.DataAvailable += Capture_DataAvailable;
                         _capture.RecordingStopped += Capture_RecordingStopped;
                         _capture.StartRecording();
                     }
                     else
                     {
-                        _capture.StopRecording();
+                        _capture?.StopRecording();
                     }
                 }
             }
@@ -372,7 +374,7 @@ namespace LauncherSilo.AudioControllerPlugin
             _waveFileWriter?.Write(e.Buffer, 0, e.BytesRecorded);
         }
 
-        private bool _IsCapture { get; set; } = true;
+        private bool _IsCapture = true;
         public ObservableCollection<AudioDeviceViewModel> AudioPlaybackDeviceVM { get; set; } = new ObservableCollection<AudioDeviceViewModel>();
         public ObservableCollection<AudioDeviceViewModel> AudioCaptureDeviceVM { get; set; } = new ObservableCollection<AudioDeviceViewModel>();
 
