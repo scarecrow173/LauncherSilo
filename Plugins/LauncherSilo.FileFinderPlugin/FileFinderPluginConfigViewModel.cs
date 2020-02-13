@@ -21,6 +21,11 @@ namespace LauncherSilo.FileFinderPlugin
             PluginConfigControlTemplate = dictionary["FileFinderPluginConfigView"] as ControlTemplate;
         }
         public FileFinderPluginConfig FileFinderPluginConfig { get { return _PluginConfig as FileFinderPluginConfig; } set { _PluginConfig = value; } }
+
+        public void ApplyConfigProperty()
+        {
+            OnPropertyChanged("IsEnableFileFinder");
+        }
         public bool IsEnableFileFinder
         {
             get

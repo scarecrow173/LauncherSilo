@@ -67,6 +67,7 @@ namespace LauncherSilo.FileFinderPlugin
         {
             PluginConfigVM = new FileFinderPluginConfigViewModel(this, Config);
             PluginConfigVM.PropertyChanged += PluginConfigVM_PropertyChanged;
+            PluginConfigVM.ApplyConfigProperty();
             return PluginConfigVM;
         }
 

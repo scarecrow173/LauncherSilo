@@ -4,7 +4,6 @@
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"        
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
                       xmlns:local="clr-namespace:LauncherSilo.FileFinderPlugin"
-                      xmlns:app="clr-namespace:LauncherSilo"
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       xmlns:extk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
                       mc:Ignorable="d" 
@@ -15,6 +14,12 @@
                       ShowMinButton="False"
                       ShowMaxRestoreButton="False"
                       Title="FileFinderView" Height="600" Width="500" WindowStyle="None" Deactivated="MetroWindow_Deactivated">
+    <Window.Resources>
+        <ContextMenu x:Key="FinderItemCcontext">
+            <MenuItem Header="実行" Command="{Binding RunFile}" CommandParameter="{Binding SelectedItem}"/>
+            <MenuItem Header="フォルダを開く" Command="{Binding ShowFolder}" CommandParameter="{Binding SelectedItem}"/>
+        </ContextMenu>
+    </Window.Resources>
     <Grid>
         <DockPanel LastChildFill="True">
             <StatusBar DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
@@ -42,7 +47,7 @@
             </StatusBar>
             <DockPanel DockPanel.Dock="Top" LastChildFill="True">
                 <TextBox  DockPanel.Dock="Top" Margin="8" FontSize="36" Foreground="{DynamicResource AccentSelectedColorBrush}" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsReady}" TabIndex="1" KeyUp="TextBox_KeyUp"/>
-                <ListView DockPanel.Dock="Bottom" Margin="4" ItemsSource="{Binding DisplayItems}" SelectedItem="{Binding SelectedItem}" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" TabIndex="2">
+                <ListView DockPanel.Dock="Bottom" Margin="4" ItemsSource="{Binding DisplayItems}" SelectedItem="{Binding SelectedItem}" ContextMenu="{DynamicResource FinderItemCcontext}"  ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" TabIndex="2">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>

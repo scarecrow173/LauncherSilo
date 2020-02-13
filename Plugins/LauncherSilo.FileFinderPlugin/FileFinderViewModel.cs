@@ -8,11 +8,72 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
+using System.Windows.Input;
 
 using Misc;
 
 namespace LauncherSilo.FileFinderPlugin
 {
+
+    public class ShowFolderCommand : ICommand
+    {
+        public event EventHandler CanExecuteChanged;
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+        public void Execute(object parameter)
+        {
+            FileFinderDisplayItemViewModel Item = parameter as FileFinderDisplayItemViewModel;
+            if (Item == null)
+            {
+                return;
+            }
+
+            string DirectoryPath = Item.Path;
+            if (!System.IO.Directory.Exists(Item.Path))
+            {
+                DirectoryPath = System.IO.Path.GetDirectoryName(Item.Path);
+            }
+            if (!System.IO.Directory.Exists(DirectoryPath))
+            {
+                return;
+            }
+            Process.Start(DirectoryPath);
+        }
+        public void RaiseCanExecuteChanged()
+        {
+            if (CanExecuteChanged != null)
+                CanExecuteChanged(this, null);
+        }
+    }
+    public class RunFileCommand : ICommand
+    {
+        public event EventHandler CanExecuteChanged;
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+        public void Execute(object parameter)
+        {
+            FileFinderDisplayItemViewModel Item = parameter as FileFinderDisplayItemViewModel;
+            if (Item == null)
+            {
+                return;
+            }
+            string FilePath = Item.Path;
+            if (!System.IO.File.Exists(FilePath) && !System.IO.Directory.Exists(FilePath))
+            {
+                return;
+            }
+            Process.Start(FilePath);
+        }
+        public void RaiseCanExecuteChanged()
+        {
+            if (CanExecuteChanged != null)
+                CanExecuteChanged(this, null);
+        }
+    }
     public class FileFinderDisplayItemViewModel : INotifyPropertyChanged
     {
         public string Name
@@ -101,6 +162,9 @@ namespace LauncherSilo.FileFinderPlugin
         private CancellationTokenSource _cancellation = null;
         private CancellationToken _cancellation_token;
         private System.Timers.Timer SearchQueryTimer = new System.Timers.Timer(100) { AutoReset = false };
+
+        public ShowFolderCommand ShowFolder { get; private set; } = new ShowFolderCommand();
+        public RunFileCommand RunFile { get; private set; } = new RunFileCommand();
 
         public float SearchRange
         {
