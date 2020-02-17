@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.IO;
 
 using LauncherSilo.PluginSystem;
@@ -62,7 +64,8 @@ namespace LauncherSilo.FileFinderPlugin
                 Type = MenuType.System,
                 CommandInfoID = string.Empty,
                 Children = new ObservableCollection<MenuTreeNode>(),
-                ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F
+                ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F,
+                IconSource = new BitmapImage(new Uri("pack://application:,,,/LauncherSilo.FileFinderPlugin;component/file-find-outline.png"))
             };
         }
         private void OnFileFinderMenu(object sender, EventArgs e)

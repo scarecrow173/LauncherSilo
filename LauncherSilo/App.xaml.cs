@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows;
+using System.Windows.Media;
 using System.Diagnostics;
 using System.Collections.Specialized;
 using System.Collections.ObjectModel;
@@ -16,6 +17,7 @@ using LauncherSilo.Core.Models;
 using LauncherSilo.Views;
 using LauncherSilo.ViewModels;
 using LauncherSilo.Models;
+using LauncherSilo.Utility;
 using Input;
 using Misc;
 
@@ -190,7 +192,8 @@ namespace LauncherSilo
                 IsVisible = true,
                 Type = MenuType.System,
                 CommandInfoID = string.Empty,
-                Children = new ObservableCollection<MenuTreeNode>()
+                Children = new ObservableCollection<MenuTreeNode>(),
+                IconSource = MaterialDesignIconSourceStorage.FindPackIconImage(MaterialDesignThemes.Wpf.PackIconKind.Settings, new SolidColorBrush(Colors.White), 0)
             });
 
             SystemMenuNodes.Add(new SystemMenuTreeNode(new EventHandler(OnExitMenuExecute))
@@ -200,6 +203,7 @@ namespace LauncherSilo
                 Type = MenuType.System,
                 CommandInfoID = string.Empty,
                 Children = new ObservableCollection<MenuTreeNode>(),
+                IconSource = MaterialDesignIconSourceStorage.FindPackIconImage(MaterialDesignThemes.Wpf.PackIconKind.ExitToApp, new SolidColorBrush(Colors.White), 0)
             });
         }
 

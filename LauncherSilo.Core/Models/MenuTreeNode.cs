@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.Windows.Media;
 
 namespace LauncherSilo.Core.Models
 {
@@ -32,6 +33,7 @@ namespace LauncherSilo.Core.Models
     public class SystemMenuTreeNode : MenuTreeNode
     {
         public System.Windows.Forms.Keys ShortcutKeys { get; set; } = System.Windows.Forms.Keys.None;
+        public ImageSource IconSource { get; set; } = null;
 
         private event EventHandler SystemMenuExecute;
         

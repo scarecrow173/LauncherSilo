@@ -8,6 +8,7 @@ using System.Windows.Media;
 
 using LauncherSilo.Core.Models;
 using LauncherSilo.Models;
+using LauncherSilo.Utility;
 
 namespace LauncherSilo.Views
 {
@@ -31,25 +32,25 @@ namespace LauncherSilo.Views
             {
                 Stretch = Stretch.Uniform,
                 Viewport = new Rect(0.25, 0.25, 0.5, 0.5),
-                ImageSource = CreateImageSource(MaterialDesignThemes.Wpf.PackIconKind.Console, new SolidColorBrush(Colors.White), 0),
+                ImageSource = MaterialDesignIconSourceStorage.FindPackIconImage(MaterialDesignThemes.Wpf.PackIconKind.Console, new SolidColorBrush(Colors.White), 0),
             };
             FolderImageBrush = new ImageBrush()
             {
                 Stretch = Stretch.Uniform,
                 Viewport = new Rect(0.25, 0.25, 0.5, 0.5),
-                ImageSource = CreateImageSource(MaterialDesignThemes.Wpf.PackIconKind.Folder, new SolidColorBrush(Colors.White), 0)
+                ImageSource = MaterialDesignIconSourceStorage.FindPackIconImage(MaterialDesignThemes.Wpf.PackIconKind.Folder, new SolidColorBrush(Colors.White), 0)
             };
             UnknownFileImageBrush = new ImageBrush()
             {
                 Stretch = Stretch.Uniform,
                 Viewport = new Rect(0.25, 0.25, 0.5, 0.5),
-                ImageSource = CreateImageSource(MaterialDesignThemes.Wpf.PackIconKind.File, new SolidColorBrush(Colors.White), 0),
+                ImageSource = MaterialDesignIconSourceStorage.FindPackIconImage(MaterialDesignThemes.Wpf.PackIconKind.File, new SolidColorBrush(Colors.White), 0),
             };
             SystemImageBrush = new ImageBrush()
             {
                 Stretch = Stretch.Uniform,
                 Viewport = new Rect(0.25, 0.25, 0.5, 0.5),
-                ImageSource = CreateImageSource(MaterialDesignThemes.Wpf.PackIconKind.ExitToApp, new SolidColorBrush(Colors.White), 0),
+                ImageSource = MaterialDesignIconSourceStorage.FindPackIconImage(MaterialDesignThemes.Wpf.PackIconKind.ExitToApp, new SolidColorBrush(Colors.White), 0),
             };
 
             InitializeComponent();
@@ -84,7 +85,20 @@ namespace LauncherSilo.Views
                 NewButton.VerticalContentAlignment = VerticalAlignment.Bottom;
                 NewButton.Content = SystemMenuNode.Name;
                 NewButton.Click += SystemButton_Click;
-                NewButton.Background = SystemImageBrush;
+                if (SystemMenuNode.IconSource != null)
+                {
+                    ImageBrush iconImageBrush = new ImageBrush()
+                    {
+                        Stretch = Stretch.Uniform,
+                        Viewport = new Rect(0.25, 0.25, 0.5, 0.5),
+                        ImageSource = SystemMenuNode.IconSource,
+                    };
+                    NewButton.Background = iconImageBrush;
+                }
+                else
+                {
+                    NewButton.Background = SystemImageBrush;
+                }
                 NewButton.Background.Opacity = 1.0;
                 MainPanel.Children.Add(NewButton);
             }
@@ -187,20 +201,5 @@ namespace LauncherSilo.Views
             }
         }
 
-        public static ImageSource CreateImageSource(object value, Brush foregroundBrush, double penThickness)
-        {
-            var packIcon = new MaterialDesignThemes.Wpf.PackIcon { Kind = (MaterialDesignThemes.Wpf.PackIconKind)value };
-
-            var geometryDrawing = new GeometryDrawing
-            {
-                Geometry = Geometry.Parse(packIcon.Data),
-                Brush = foregroundBrush,
-                Pen = new Pen(foregroundBrush, penThickness)
-            };
-
-            var drawingGroup = new DrawingGroup { Children = { geometryDrawing }, Transform = new ScaleTransform(1, -1) };
-
-            return new DrawingImage { Drawing = drawingGroup };
-        }
     }
 }
