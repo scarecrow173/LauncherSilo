@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="LauncherSilo.AudioControls.AudioKnob"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LauncherSilo.AudioControls"
+             mc:Ignorable="d" 
+             MinHeight="50" Height="Auto"
+             MinWidth="50" Width="Auto"
+             Loaded="UserControl_Loaded">
+    <Grid>
+        <Border HorizontalAlignment="Center" VerticalAlignment="Center" Height="50" Width="50" CornerRadius="50 50 50 50" BorderBrush="Black" BorderThickness="1" Background="White"/>
+        <Border HorizontalAlignment="Center" VerticalAlignment="Center" Height="46" Width="46" CornerRadius="50 50 50 50" BorderBrush="Black" BorderThickness="1" Background="White" />
+        <Border x:Name="knobAngle" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 40" Height="4" Width="4" RenderTransformOrigin="0.5 5.5" CornerRadius="50 50 50 50" BorderBrush="Black" BorderThickness="1" Background="Black"/>
+    </Grid>
+</UserControl>

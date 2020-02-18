@@ -43,6 +43,7 @@
                                                                         <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                                                                             <!--Slider Value="{Binding Peek}" Maximum="1" Minimum="0" SmallChange="0.01" TickFrequency="0.1" IsMoveToPointEnabled="False" Width="100"/-->
                                                                             <audioControls:AudioMeter Value="{Binding DisplayPeek}" Minimum="0.0"  Maximum="100.0"></audioControls:AudioMeter>
+                                                                            <audioControls:AudioKnob Value="{Binding DisplayPeek}" Minimum="0.0"  Maximum="100.0"></audioControls:AudioKnob>
                                                                             <TextBlock TextAlignment="Center" Text="{Binding DisplayPeek}" Margin="0,0,0,0"></TextBlock>
                                                                         </StackPanel>
                                                                     </DataTemplate>
