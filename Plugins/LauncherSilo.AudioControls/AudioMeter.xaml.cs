@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace LauncherSilo.AudioControls
 {
@@ -69,27 +70,46 @@ namespace LauncherSilo.AudioControls
             get { return (double)GetValue(ChartLengthProperty); }
             set { SetValue(ChartLengthProperty, value); }
         }
-        public static readonly DependencyProperty TensionSizeProperty = DependencyProperty.Register("TensionSize", typeof(double), typeof(AudioMeter), new PropertyMetadata((double)0.0));
-        public double TensionSize
+        public static readonly DependencyProperty PeakBarSizeProperty = DependencyProperty.Register("PeakBarSize", typeof(double), typeof(AudioMeter), new PropertyMetadata((double)0.0));
+        public double PeakBarSize
         {
-            get { return (double)GetValue(TensionSizeProperty); }
-            set { SetValue(TensionSizeProperty, value); }
+            get { return (double)GetValue(PeakBarSizeProperty); }
+            set { SetValue(PeakBarSizeProperty, value); }
         }
-        public static readonly DependencyProperty TensionTargetPositionProperty = DependencyProperty.Register("TensionTargetPosition", typeof(double), typeof(AudioMeter), new PropertyMetadata((double)0.0));
-        public double TensionTargetPosition
+        public static readonly DependencyProperty PeakBarPositionProperty = DependencyProperty.Register("PeakBarPosition", typeof(double), typeof(AudioMeter), new PropertyMetadata((double)0.0));
+        public double PeakBarPosition
         {
-            get { return (double)GetValue(TensionTargetPositionProperty); }
-            set { SetValue(TensionTargetPositionProperty, value); }
+            get { return (double)GetValue(PeakBarPositionProperty); }
+            set { SetValue(PeakBarPositionProperty, value); }
         }
-        private TransformGroup _tensionTransform = new TransformGroup();
-        private TranslateTransform _tensionTranslation = new TranslateTransform();
-        private System.Windows.Media.Animation.Storyboard _beginTentionDown = null;
+        public static readonly DependencyProperty PeakBarUpdateIntervalProperty = DependencyProperty.Register("PeakBarUpdateInterval", typeof(int), typeof(AudioMeter), new PropertyMetadata((int)25));
+        public int PeakBarUpdateInterval
+        {
+            get { return (int)GetValue(PeakBarUpdateIntervalProperty); }
+            set { SetValue(PeakBarUpdateIntervalProperty, value); }
+        }
+        public static readonly DependencyProperty PeakBarFallDelayProperty = DependencyProperty.Register("PeakBarFallDelay", typeof(int), typeof(AudioMeter), new PropertyMetadata((int)100));
+        public int PeakBarFallDelay
+        {
+            get { return (int)GetValue(PeakBarFallDelayProperty); }
+            set { SetValue(PeakBarFallDelayProperty, value); }
+        }
+        private TransformGroup _peakBarTransform = new TransformGroup();
+        private TranslateTransform _peakBarTranslation = new TranslateTransform();
+        private readonly DispatcherTimer _animationTimer = null;
+        private TimeSpan _animationElapsedtime = new TimeSpan();
 
         public AudioMeter()
         {
             InitializeComponent();
-            _tensionTransform.Children.Add(_tensionTranslation);
+            _animationTimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle)
+            {
+                Interval = TimeSpan.FromMilliseconds(PeakBarUpdateInterval),
+            };
+            _animationTimer.Tick += _animationTimer_Tick; ;
         }
+
+
 
         public void UpdateChartLength()
         {
@@ -104,23 +124,31 @@ namespace LauncherSilo.AudioControls
 
             double percent = (Value - Minimum) / (Maximum - Minimum);
             ChartLength = percent * this.ActualHeight;
-            if ((-_tensionTranslation.Y) < ChartLength)
+        }
+        private void _animationTimer_Tick(object sender, EventArgs e)
+        {
+            if (ChartLength >= -_peakBarTranslation.Y)
             {
-                _tensionTranslation.Y = -ChartLength;
-                _beginTentionDown?.Stop();
+                _peakBarTranslation.Y = -ChartLength;
+                _animationElapsedtime = TimeSpan.FromMilliseconds(0);
             }
             else
             {
-                _beginTentionDown?.Begin();
+                _animationElapsedtime += _animationTimer.Interval;
+                if (_animationElapsedtime > TimeSpan.FromMilliseconds(PeakBarFallDelay))
+                {
+                    _peakBarTranslation.Y += PeakBarSize;
+                }
             }
-
         }
+
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            TensionSize = this.ActualHeight * 0.05;
-            tension.RenderTransform = _tensionTransform;
-            _beginTentionDown = Resources["BeginTentionDown"] as System.Windows.Media.Animation.Storyboard;
+            PeakBarSize = this.ActualHeight * 0.05;
+            _peakBarTransform.Children.Add(_peakBarTranslation);
+            peakbar.RenderTransform = _peakBarTransform;
             UpdateChartLength();
+            _animationTimer.Start();
 
         }
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -8,16 +8,9 @@
              MinHeight="100" Height="Auto"
              MinWidth="20" Width="Auto"
              Loaded="UserControl_Loaded">
-    <UserControl.Resources>
-        <Storyboard x:Key="BeginTentionDown">
-            <DoubleAnimationUsingKeyFrames BeginTime="00:00:01.0000000" Storyboard.TargetName="tension" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
-                <SplineDoubleKeyFrame KeyTime="00:00:01.0000000" Value="0" />
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>
-    </UserControl.Resources>
     <Grid SizeChanged="Grid_SizeChanged">
         <Grid Background="{Binding Background, ElementName=border}" Opacity="0.3"/>
-        <Border x:Name="tension" Background="{Binding Color, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Opacity="0.8" VerticalAlignment="Bottom" Height="{Binding TensionSize, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+        <Border x:Name="peakbar" Background="{Binding Color, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Opacity="0.8" VerticalAlignment="Bottom" Height="{Binding PeakBarSize, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
         <Border x:Name="border" Background="{Binding Color, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" VerticalAlignment="Bottom" Height="{Binding ChartLength, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
     </Grid>
 </UserControl>
