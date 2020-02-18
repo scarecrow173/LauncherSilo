@@ -20,6 +20,7 @@ project "LauncherSilo.AudioControllerPlugin"
     }
     links ("LauncherSilo.Core")
     links ("LauncherSilo.PluginSystem")
+    links ("LauncherSilo.AudioControls")
     links ("System")
     links ("System.Data")
     links ("System.Windows.Forms")
