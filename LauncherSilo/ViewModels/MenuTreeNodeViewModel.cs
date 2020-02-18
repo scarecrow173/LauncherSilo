@@ -51,6 +51,13 @@ namespace LauncherSilo.ViewModels
                 {
                     _MenuNode = value;
                     OnPropertyChanged("MenuNode");
+                    OnPropertyChanged("Name");
+                    OnPropertyChanged("IsExpanded");
+                    OnPropertyChanged("IsItemSelected");
+                    OnPropertyChanged("IsVisible");
+                    OnPropertyChanged("Type");
+                    OnPropertyChanged("Children");
+                    OnPropertyChanged("HasExecutableNode");
                 }
             }
         }

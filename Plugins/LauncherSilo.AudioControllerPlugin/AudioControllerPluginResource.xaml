@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:LauncherSilo.AudioControllerPlugin"
-                    xmlns:audioControls="clr-namespace:LauncherSilo.AudioControllerPlugin.Controls;assembly=LauncherSilo.AudioControllerPlugin">
+                    xmlns:audioControls="clr-namespace:LauncherSilo.AudioControls;assembly=LauncherSilo.AudioControls">
     <ControlTemplate x:Key="AudioControllerPluginConfigView">
         <Grid>
             <StackPanel Orientation="Vertical">
@@ -42,7 +42,7 @@
                                                                     <DataTemplate>
                                                                         <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                                                                             <!--Slider Value="{Binding Peek}" Maximum="1" Minimum="0" SmallChange="0.01" TickFrequency="0.1" IsMoveToPointEnabled="False" Width="100"/-->
-                                                                            <audioControls:LevelMeter Level="{Binding DisplayPeek}" MinLevel="0"  MaxLevel="100"></audioControls:LevelMeter>
+                                                                            <audioControls:AudioMeter Value="{Binding DisplayPeek}" Minimum="0.0"  Maximum="100.0"></audioControls:AudioMeter>
                                                                             <TextBlock TextAlignment="Center" Text="{Binding DisplayPeek}" Margin="0,0,0,0"></TextBlock>
                                                                         </StackPanel>
                                                                     </DataTemplate>
