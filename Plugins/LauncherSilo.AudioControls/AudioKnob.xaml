@@ -36,14 +36,14 @@
         <drawing:Arc Stroke="{Binding AccentBrush, FallbackValue=Black, RelativeSource={RelativeSource AncestorType=UserControl}}" 
                      StartAngle="{Binding StartAngle, FallbackValue=-150, RelativeSource={RelativeSource AncestorType=UserControl}}" 
                      EndAngle="{Binding EndAngle, FallbackValue=150, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                     Margin="2"
-                     Opacity="0.8"
-                     StrokeThickness="10" Stretch="None" IsHitTestVisible="False"/>
+                     Opacity="0.6"
+                     Margin="4"
+                     StrokeThickness="4" Stretch="None" IsHitTestVisible="False"/>
         <drawing:Arc Stroke="{Binding AccentBrush, FallbackValue=Black, RelativeSource={RelativeSource AncestorType=UserControl}}" 
                      StartAngle="{Binding StartAngle, FallbackValue=-150, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                     EndAngle="{Binding ValueAngle, FallbackValue=-120, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                     EndAngle="{Binding ValueAngle, FallbackValue=-120, RelativeSource={RelativeSource AncestorType=UserControl}}"
                      Margin="2"
-                     StrokeThickness="10"  Stretch="None" IsHitTestVisible="False"/>
+                     StrokeThickness="8" Stretch="None" IsHitTestVisible="False"/>
         <Ellipse x:Name="knobAngle" 
                  HorizontalAlignment="Center" VerticalAlignment="Center" 
                  Height="{Binding AngleDiameter, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}"  Width="{Binding AngleDiameter, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}" 
