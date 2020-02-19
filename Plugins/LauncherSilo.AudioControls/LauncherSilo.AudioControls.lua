@@ -14,6 +14,8 @@ project "LauncherSilo.AudioControls"
         "Tests/**"
     }
     nuget {
+        "Fody:4.0.2",
+        "Costura.Fody:3.3.3"
     }
 
     links ("System")
@@ -29,6 +31,7 @@ project "LauncherSilo.AudioControls"
     links ("WindowsBase")
     links ("PresentationCore")
     links ("PresentationFramework")
+    links ("Microsoft.Expression.Drawing")
     
     filter { "configurations:Debug" }
         defines { "DEBUG", "TRACE" }

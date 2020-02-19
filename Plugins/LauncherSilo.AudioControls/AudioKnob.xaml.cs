@@ -44,6 +44,18 @@ namespace LauncherSilo.AudioControls
             get { return (double)GetValue(IntervalProperty); }
             set { SetValue(IntervalProperty, value); }
         }
+        public static readonly DependencyProperty StartAngleProperty = DependencyProperty.Register("StartAngle", typeof(double), typeof(AudioKnob), new PropertyMetadata((double)-150));
+        public double StartAngle
+        {
+            get { return (double)GetValue(StartAngleProperty); }
+            set { SetValue(StartAngleProperty, value); }
+        }
+        public static readonly DependencyProperty EndAngleProperty = DependencyProperty.Register("EndAngle", typeof(double), typeof(AudioKnob), new PropertyMetadata((double)150));
+        public double EndAngle
+        {
+            get { return (double)GetValue(EndAngleProperty); }
+            set { SetValue(EndAngleProperty, value); }
+        }
         public static readonly DependencyProperty BackgroundBrushProperty = DependencyProperty.Register("BackgroundBrush", typeof(Brush), typeof(AudioKnob), new PropertyMetadata(Brushes.LightGray));
         public Brush BackgroundBrush
         {
@@ -80,7 +92,12 @@ namespace LauncherSilo.AudioControls
             get { return (Point)GetValue(AngleOffsetProperty); }
             set { SetValue(AngleOffsetProperty, value); }
         }
-
+        public static readonly DependencyProperty ValueAngleProperty = DependencyProperty.Register("ValueAngle", typeof(double), typeof(AudioKnob), new PropertyMetadata((double)0));
+        public double ValueAngle
+        {
+            get { return (double)GetValue(ValueAngleProperty); }
+            set { SetValue(ValueAngleProperty, value); }
+        }
         private TransformGroup _knobAngleTransform = new TransformGroup();
         private RotateTransform _knobAngleRotate = new RotateTransform();
         private bool _isMouseDown = false;
@@ -149,14 +166,14 @@ namespace LauncherSilo.AudioControls
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 double diameter = Math.Min(ActualHeight, ActualWidth);
-                outerCircle.Width = diameter;
-                outerCircle.Height = diameter;
+                CircleDiameter = diameter;
 
-                double knob_margin = diameter * 0.8;
-                AngleDiameter = knob_margin * 0.1;
+                double knob_margin = diameter * 0.6;
+                AngleDiameter = diameter * 0.1;
                 AngleMargin = new Thickness(0, 0, 0, knob_margin);
                 double CenterY = ((knob_margin / AngleDiameter) * 0.5) + 0.5;
                 AngleOffset = new Point(0.5, CenterY);
+                UpdateValueAngle();
             }));
 
 
@@ -172,8 +189,9 @@ namespace LauncherSilo.AudioControls
                 return;
             }
 
-            double percent = (Value - Minimum) / (Maximum - Minimum);
-            _knobAngleRotate.Angle = (int)(percent * 360.0);
+            double newAngle = (EndAngle - StartAngle) / (Maximum - Minimum) * (Value - Minimum) + StartAngle;
+            _knobAngleRotate.Angle = newAngle;
+            ValueAngle = newAngle;
         }
 
         private static void ValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
