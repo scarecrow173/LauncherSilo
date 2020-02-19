@@ -14,7 +14,8 @@
     <Grid SizeChanged="Grid_SizeChanged">
         <Ellipse x:Name="outerCircle" 
                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                 Fill="White"
+                 Height="{Binding CircleDiameter, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}"  Width="{Binding CircleDiameter, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                 Fill="{Binding BackgroundBrush, FallbackValue=LightGray, RelativeSource={RelativeSource AncestorType=UserControl}}"
                  MouseWheel="OuterCircle_MouseWheel" 
                  MouseDown="OuterCircle_MouseDown" 
                  MouseMove="OuterCircle_MouseMove" 
@@ -23,7 +24,7 @@
                  MouseLeftButtonDown="OuterCircle_MouseLeftButtonDown">
             <Ellipse.Style>
                 <Style TargetType="{x:Type Ellipse}">
-                    <Setter Property="Fill" Value="White" />
+                    <Setter Property="Fill" Value="{Binding BackgroundBrush, FallbackValue=LightGray, RelativeSource={RelativeSource AncestorType=UserControl}}" />
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Opacity" Value="0.9"/>
@@ -33,8 +34,10 @@
             </Ellipse.Style>
         </Ellipse>
         <Ellipse x:Name="knobAngle" 
-                HorizontalAlignment="Center" VerticalAlignment="Center" 
-                Height="4" Width="4"
-                Fill="Black"/>
+                 HorizontalAlignment="Center" VerticalAlignment="Center" 
+                 Height="{Binding AngleDiameter, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}"  Width="{Binding AngleDiameter, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                 Margin="{Binding AngleMargin, FallbackValue='0 0 0 80', RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                 RenderTransformOrigin="{Binding AngleOffset, FallbackValue='0.5 10.5', RelativeSource={RelativeSource AncestorType=UserControl}}"
+                 Fill="{Binding AccentBrush, FallbackValue=Black, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
     </Grid>
 </UserControl>

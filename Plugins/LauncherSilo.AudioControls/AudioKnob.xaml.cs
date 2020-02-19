@@ -38,6 +38,48 @@ namespace LauncherSilo.AudioControls
             get { return (double)GetValue(MinimumProperty); }
             set { SetValue(MinimumProperty, value); }
         }
+        public static readonly DependencyProperty IntervalProperty = DependencyProperty.Register("Interval", typeof(double), typeof(AudioKnob), new PropertyMetadata((double)1.0));
+        public double Interval
+        {
+            get { return (double)GetValue(IntervalProperty); }
+            set { SetValue(IntervalProperty, value); }
+        }
+        public static readonly DependencyProperty BackgroundBrushProperty = DependencyProperty.Register("BackgroundBrush", typeof(Brush), typeof(AudioKnob), new PropertyMetadata(Brushes.LightGray));
+        public Brush BackgroundBrush
+        {
+            get { return (Brush)GetValue(BackgroundBrushProperty); }
+            set { SetValue(BackgroundBrushProperty, value); }
+        }
+        public static readonly DependencyProperty AccentBrushProperty = DependencyProperty.Register("AccentBrush", typeof(Brush), typeof(AudioKnob), new PropertyMetadata(Brushes.Black));
+        public Brush AccentBrush
+        {
+            get { return (Brush)GetValue(AccentBrushProperty); }
+            set { SetValue(AccentBrushProperty, value); }
+        }
+        public static readonly DependencyProperty CircleDiameterProperty = DependencyProperty.Register("CircleDiameter", typeof(double), typeof(AudioKnob), new PropertyMetadata(100.0));
+        private double CircleDiameter
+        {
+            get { return (double)GetValue(CircleDiameterProperty); }
+            set { SetValue(CircleDiameterProperty, value); }
+        }
+        public static readonly DependencyProperty AngleDiameterProperty = DependencyProperty.Register("AngleDiameter", typeof(double), typeof(AudioKnob), new PropertyMetadata(10.0));
+        private double AngleDiameter
+        {
+            get { return (double)GetValue(AngleDiameterProperty); }
+            set { SetValue(AngleDiameterProperty, value); }
+        }
+        public static readonly DependencyProperty AngleMarginProperty = DependencyProperty.Register("AngleMargin", typeof(Thickness), typeof(AudioKnob), new PropertyMetadata(new Thickness(0,0,0,80)));
+        private Thickness AngleMargin
+        {
+            get { return (Thickness)GetValue(AngleMarginProperty); }
+            set { SetValue(AngleMarginProperty, value); }
+        }
+        public static readonly DependencyProperty AngleOffsetProperty = DependencyProperty.Register("AngleOffset", typeof(Point), typeof(AudioKnob), new PropertyMetadata(new Point(0.5, 10.5)));
+        private Point AngleOffset
+        {
+            get { return (Point)GetValue(AngleOffsetProperty); }
+            set { SetValue(AngleOffsetProperty, value); }
+        }
 
         private TransformGroup _knobAngleTransform = new TransformGroup();
         private RotateTransform _knobAngleRotate = new RotateTransform();
@@ -61,8 +103,8 @@ namespace LauncherSilo.AudioControls
         }
         private void OuterCircle_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            double d = e.Delta / 120; // Mouse wheel 1 click (120 delta) = 1 step
-            Value += d * 1;
+            double d = e.Delta / 120;
+            Value += d * Interval;
         }
 
         private void OuterCircle_MouseDown(object sender, MouseButtonEventArgs e)
@@ -83,7 +125,7 @@ namespace LauncherSilo.AudioControls
                 double dY = (_previousMousePosition.Y - newMousePosition.Y);
                 if (Math.Abs(dY) > _mouseMoveThreshold)
                 {
-                    Value += Math.Sign(dY) * 1;
+                    Value += Math.Sign(dY) * Interval;
                     _previousMousePosition = newMousePosition;
                 }
             }
@@ -111,10 +153,10 @@ namespace LauncherSilo.AudioControls
                 outerCircle.Height = diameter;
 
                 double knob_margin = diameter * 0.8;
-                double knob_diameter = knob_margin * 0.1;
-                knobAngle.Margin = new Thickness(0, 0, 0, knob_margin);
-                double CenterY = ((knob_margin / knobAngle.Height) * 0.5) + 0.5;
-                knobAngle.RenderTransformOrigin = new Point(0.5, CenterY);
+                AngleDiameter = knob_margin * 0.1;
+                AngleMargin = new Thickness(0, 0, 0, knob_margin);
+                double CenterY = ((knob_margin / AngleDiameter) * 0.5) + 0.5;
+                AngleOffset = new Point(0.5, CenterY);
             }));
 
 

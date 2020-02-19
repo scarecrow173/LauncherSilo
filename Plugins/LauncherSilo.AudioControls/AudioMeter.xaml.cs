@@ -58,11 +58,11 @@ namespace LauncherSilo.AudioControls
             get { return (Brush)GetValue(ColorProperty); }
             set { SetValue(ColorProperty, value); }
         }
-        public static readonly DependencyProperty HighlightProperty = DependencyProperty.Register("Highlight", typeof(Brush), typeof(AudioMeter), new PropertyMetadata(Brushes.LightGray, HighlightPropertyChanged));
-        public Brush Highlight
+        public static readonly DependencyProperty AccentProperty = DependencyProperty.Register("Accent", typeof(Brush), typeof(AudioMeter), new PropertyMetadata(Brushes.LightGray, HighlightPropertyChanged));
+        public Brush Accent
         {
-            get { return (Brush)GetValue(HighlightProperty); }
-            set { SetValue(HighlightProperty, value); }
+            get { return (Brush)GetValue(AccentProperty); }
+            set { SetValue(AccentProperty, value); }
         }
         public static readonly DependencyProperty ChartLengthProperty = DependencyProperty.Register("ChartLength", typeof(double), typeof(AudioMeter), new PropertyMetadata((double)0.0));
         public double ChartLength
