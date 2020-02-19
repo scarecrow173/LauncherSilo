@@ -151,6 +151,10 @@ namespace LauncherSilo.AudioControls
             _animationTimer.Start();
 
         }
+        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateChartLength();
+        }
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateChartLength();

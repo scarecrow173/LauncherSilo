@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LauncherSilo.AudioControls"
              mc:Ignorable="d" 
-             MinHeight="100" Height="Auto"
-             MinWidth="20" Width="Auto"
+             MinHeight="100"
+             MinWidth="20"
+             SizeChanged="UserControl_SizeChanged"
              Loaded="UserControl_Loaded">
     <Grid SizeChanged="Grid_SizeChanged">
         <Grid Background="{Binding Background, ElementName=border}" Opacity="0.3"/>

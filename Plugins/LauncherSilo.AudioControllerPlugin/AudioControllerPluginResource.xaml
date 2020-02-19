@@ -6,6 +6,7 @@
         <Grid>
             <StackPanel Orientation="Vertical">
                 <CheckBox IsChecked="{Binding IsCapture}"/>
+                <audioControls:AudioKnob Width="100" Height="100" Value="0" Minimum="0.0"  Maximum="100.0"></audioControls:AudioKnob>
                 <StackPanel Orientation="Horizontal">
                     <ListView ItemsSource="{Binding AudioPlaybackDeviceVM}">
                         <ListView.View>
@@ -40,11 +41,11 @@
                                                             <GridViewColumn>
                                                                 <GridViewColumn.CellTemplate>
                                                                     <DataTemplate>
-                                                                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                                                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" >
                                                                             <!--Slider Value="{Binding Peek}" Maximum="1" Minimum="0" SmallChange="0.01" TickFrequency="0.1" IsMoveToPointEnabled="False" Width="100"/-->
                                                                             <audioControls:AudioMeter Value="{Binding DisplayPeek}" Minimum="0.0"  Maximum="100.0"></audioControls:AudioMeter>
                                                                             <audioControls:AudioKnob Value="{Binding DisplayPeek}" Minimum="0.0"  Maximum="100.0"></audioControls:AudioKnob>
-                                                                            <TextBlock TextAlignment="Center" Text="{Binding DisplayPeek}" Margin="0,0,0,0"></TextBlock>
+                                                                            <TextBlock Width="50" TextAlignment="Center" Text="{Binding DisplayPeek}" Margin="0,0,0,0"></TextBlock>
                                                                         </StackPanel>
                                                                     </DataTemplate>
                                                                 </GridViewColumn.CellTemplate>

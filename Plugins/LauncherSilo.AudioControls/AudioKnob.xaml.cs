@@ -41,7 +41,9 @@ namespace LauncherSilo.AudioControls
 
         private TransformGroup _knobAngleTransform = new TransformGroup();
         private RotateTransform _knobAngleRotate = new RotateTransform();
-
+        private bool _isMouseDown = false;
+        private Point _previousMousePosition = new Point();
+        private double _mouseMoveThreshold = 5;
 
         public AudioKnob()
         {
@@ -49,10 +51,74 @@ namespace LauncherSilo.AudioControls
         }
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            LayoutElements();
             _knobAngleTransform.Children.Add(_knobAngleRotate);
             knobAngle.RenderTransform = _knobAngleTransform;
         }
+        private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            LayoutElements();
+        }
+        private void OuterCircle_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            double d = e.Delta / 120; // Mouse wheel 1 click (120 delta) = 1 step
+            Value += d * 1;
+        }
 
+        private void OuterCircle_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!(sender as Ellipse).CaptureMouse())
+            {
+                return;
+            }
+            _isMouseDown = true;
+            _previousMousePosition = e.GetPosition((Ellipse)sender);
+        }
+
+        private void OuterCircle_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_isMouseDown)
+            {
+                Point newMousePosition = e.GetPosition((Ellipse)sender);
+                double dY = (_previousMousePosition.Y - newMousePosition.Y);
+                if (Math.Abs(dY) > _mouseMoveThreshold)
+                {
+                    Value += Math.Sign(dY) * 1;
+                    _previousMousePosition = newMousePosition;
+                }
+            }
+        }
+
+        private void OuterCircle_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            _isMouseDown = false;
+            (sender as Ellipse).ReleaseMouseCapture();
+        }
+
+        private void OuterCircle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+        }
+        private void OuterCircle_LostMouseCapture(object sender, MouseEventArgs e)
+        {
+            _isMouseDown = false;
+        }
+        private void LayoutElements()
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                double diameter = Math.Min(ActualHeight, ActualWidth);
+                outerCircle.Width = diameter;
+                outerCircle.Height = diameter;
+
+                double knob_margin = diameter * 0.8;
+                double knob_diameter = knob_margin * 0.1;
+                knobAngle.Margin = new Thickness(0, 0, 0, knob_margin);
+                double CenterY = ((knob_margin / knobAngle.Height) * 0.5) + 0.5;
+                knobAngle.RenderTransformOrigin = new Point(0.5, CenterY);
+            }));
+
+
+        }
         public void UpdateValueAngle()
         {
             if (!IsLoaded)
@@ -67,6 +133,7 @@ namespace LauncherSilo.AudioControls
             double percent = (Value - Minimum) / (Maximum - Minimum);
             _knobAngleRotate.Angle = (int)(percent * 360.0);
         }
+
         private static void ValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             AudioKnob control = d as AudioKnob;
