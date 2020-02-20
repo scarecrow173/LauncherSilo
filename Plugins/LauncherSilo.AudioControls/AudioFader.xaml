@@ -5,14 +5,58 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LauncherSilo.AudioControls"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="20">
-    <Grid>
-        <Border Width="10" Background="Gray" Opacity="0.6" VerticalAlignment="Bottom" Height="500" CornerRadius="10" />
-        <Border Width="5" Background="Black" Opacity="0.6" VerticalAlignment="Bottom" Height="500" CornerRadius="10" />
-
-
-        <Border VerticalAlignment="Bottom" Height="40" BorderThickness="1" BorderBrush="White" Background="Gray" CornerRadius="8">
-            <Border VerticalAlignment="Center" Height="2" Width="15" BorderThickness="1" BorderBrush="White" Background="Black" CornerRadius="1"/>
-        </Border>
+             d:DesignHeight="100" d:DesignWidth="20"
+             Loaded="UserControl_Loaded">
+    <Grid SizeChanged="Grid_SizeChanged">
+        <Border Width="{Binding OuterSize, FallbackValue='20', RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Height="{Binding Length, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                Background="{Binding BackgroundBrush, FallbackValue=LightGray, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Opacity="0.6" VerticalAlignment="Bottom" 
+                CornerRadius="{Binding BackgroundCornerRadius, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}" />
+        <Border Width="{Binding InnerSize, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Height="{Binding Length, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Background="{Binding BackgroundBrush, FallbackValue=LightGray, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Opacity="0.6" VerticalAlignment="Bottom" 
+                CornerRadius="{Binding BackgroundCornerRadius, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}" />
+        <Border Width="{Binding InnerSize, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                Height="{Binding ValuePosition, FallbackValue='25', RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Background="{Binding AccentBrush, FallbackValue=White, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                VerticalAlignment="Bottom" 
+                CornerRadius="{Binding HeightlightCornerRadius, FallbackValue='0 0 10 10', RelativeSource={RelativeSource AncestorType=UserControl}}" />
+        <Canvas Width="{Binding OuterSize, FallbackValue='20', RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Height="{Binding Length, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}" >
+            <Thumb Canvas.Bottom="{Binding ValuePosition, FallbackValue='25', RelativeSource={RelativeSource AncestorType=UserControl}}"
+                   MouseWheel="Thumb_MouseWheel"
+                   DragCompleted="Thumb_DragCompleted"
+                   DragStarted="Thumb_DragStarted"
+                   DragDelta="Thumb_DragDelta">
+                <Thumb.Style>
+                    <Style TargetType="{x:Type Thumb}">
+                        <Setter Property="SnapsToDevicePixels" Value="true" />
+                        <Setter Property="OverridesDefaultStyle" Value="true" />
+                        <Setter Property="Height" Value="{Binding CursorSize, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                        <Setter Property="Width" Value="{Binding OuterSize, FallbackValue='20', RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Thumb}">
+                                    <Border VerticalAlignment="Bottom" 
+                                        Height="{Binding CursorSize, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                        BorderThickness="1" 
+                                        BorderBrush="{Binding AccentBrush, FallbackValue=White, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        Background="{Binding BackgroundBrush, FallbackValue=LightGray, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                        CornerRadius="{Binding CursorCornerRadius, FallbackValue='1', RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                        >
+                                        <Border VerticalAlignment="Center" Height="2" Width="15" BorderThickness="1"
+                                            BorderBrush="{Binding AccentBrush, FallbackValue=White, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                            Background="{Binding AccentBrush, FallbackValue=Black, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                            CornerRadius="1"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Thumb.Style>
+            </Thumb>
+        </Canvas>
     </Grid>
 </UserControl>

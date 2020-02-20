@@ -173,12 +173,12 @@ namespace LauncherSilo.AudioControls
                 AngleMargin = new Thickness(0, 0, 0, knob_margin);
                 double CenterY = ((knob_margin / AngleDiameter) * 0.5) + 0.5;
                 AngleOffset = new Point(0.5, CenterY);
-                UpdateValueAngle();
+                Update();
             }));
 
 
         }
-        public void UpdateValueAngle()
+        public void Update()
         {
             if (!IsLoaded)
             {
@@ -199,7 +199,7 @@ namespace LauncherSilo.AudioControls
             AudioKnob control = d as AudioKnob;
             if (control != null)
             {
-                control.UpdateValueAngle();
+                control.Update();
             }
         }
         private static object ValuePropertyCoerce(DependencyObject d, object baseValue)
@@ -224,7 +224,7 @@ namespace LauncherSilo.AudioControls
             AudioKnob control = d as AudioKnob;
             if (control != null)
             {
-                control.UpdateValueAngle();
+                control.Update();
             }
         }
         private static object MaximumPropertyCoerce(DependencyObject d, object baseValue)
@@ -240,7 +240,7 @@ namespace LauncherSilo.AudioControls
             AudioKnob control = d as AudioKnob;
             if (control != null)
             {
-                control.UpdateValueAngle();
+                control.Update();
             }
         }
         private static object MinimumPropertyCoerce(DependencyObject d, object baseValue)

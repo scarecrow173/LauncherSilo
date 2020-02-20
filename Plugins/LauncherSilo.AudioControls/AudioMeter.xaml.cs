@@ -111,7 +111,7 @@ namespace LauncherSilo.AudioControls
 
 
 
-        public void UpdateChartLength()
+        public void Update()
         {
             if (!IsLoaded)
             {
@@ -147,24 +147,24 @@ namespace LauncherSilo.AudioControls
             PeakBarSize = this.ActualHeight * 0.05;
             _peakBarTransform.Children.Add(_peakBarTranslation);
             peakbar.RenderTransform = _peakBarTransform;
-            UpdateChartLength();
+            Update();
             _animationTimer.Start();
 
         }
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            UpdateChartLength();
+            Update();
         }
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            UpdateChartLength();
+            Update();
         }
         private static void ValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             AudioMeter control = d as AudioMeter;
             if (control != null)
             {
-                control.UpdateChartLength();
+                control.Update();
             }
         }
         private static object ValuePropertyCoerce(DependencyObject d, object baseValue)
@@ -189,7 +189,7 @@ namespace LauncherSilo.AudioControls
             AudioMeter control = d as AudioMeter;
             if (control != null)
             {
-                control.UpdateChartLength();
+                control.Update();
             }
         }
         private static object MaximumPropertyCoerce(DependencyObject d, object baseValue)
@@ -205,7 +205,7 @@ namespace LauncherSilo.AudioControls
             AudioMeter control = d as AudioMeter;
             if (control != null)
             {
-                control.UpdateChartLength();
+                control.Update();
             }
         }
         private static object MinimumPropertyCoerce(DependencyObject d, object baseValue)
