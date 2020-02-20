@@ -101,6 +101,7 @@ namespace LauncherSilo.AudioControls
         private TransformGroup _knobAngleTransform = new TransformGroup();
         private RotateTransform _knobAngleRotate = new RotateTransform();
         private bool _isMouseDown = false;
+        private Cursor _previousCursor = Cursors.None;
         private Point _previousMousePosition = new Point();
         private double _mouseMoveThreshold = 5;
 
@@ -118,20 +119,28 @@ namespace LauncherSilo.AudioControls
         {
             LayoutElements();
         }
-        private void OuterCircle_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            double d = e.Delta / 120;
-            Value += d * Interval;
-        }
 
-        private void OuterCircle_MouseDown(object sender, MouseButtonEventArgs e)
+
+        private void OuterCircle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (!(sender as Ellipse).CaptureMouse())
             {
                 return;
             }
             _isMouseDown = true;
+            _previousCursor = Cursor;
+            Cursor = Cursors.None;
             _previousMousePosition = e.GetPosition((Ellipse)sender);
+        }
+
+        private void OuterCircle_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            _isMouseDown = false;
+            if (Cursor == Cursors.None)
+            {
+                Cursor = _previousCursor;
+            }
+            (sender as Ellipse).ReleaseMouseCapture();
         }
 
         private void OuterCircle_MouseMove(object sender, MouseEventArgs e)
@@ -143,23 +152,25 @@ namespace LauncherSilo.AudioControls
                 if (Math.Abs(dY) > _mouseMoveThreshold)
                 {
                     Value += Math.Sign(dY) * Interval;
-                    _previousMousePosition = newMousePosition;
+                    Point MousePos = PointToScreen(_previousMousePosition);
+                    System.Windows.Forms.Cursor.Position = new System.Drawing.Point((int)MousePos.X, (int)MousePos.Y);
                 }
             }
         }
 
-        private void OuterCircle_MouseUp(object sender, MouseButtonEventArgs e)
+        private void OuterCircle_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            _isMouseDown = false;
-            (sender as Ellipse).ReleaseMouseCapture();
+            double d = e.Delta / 120;
+            Value += d * Interval;
         }
 
-        private void OuterCircle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-        }
         private void OuterCircle_LostMouseCapture(object sender, MouseEventArgs e)
         {
             _isMouseDown = false;
+            if (Cursor == Cursors.None)
+            {
+                Cursor = _previousCursor;
+            }
         }
         private void LayoutElements()
         {

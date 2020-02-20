@@ -22,6 +22,7 @@ project "LauncherSilo.AudioControls"
     links ("System.Data")
     links ("System.Windows.Forms")
     links ("System.Xml")
+    links ("System.Drawing")
     links ("Microsoft.CSharp")
     links ("System.Core")
     links ("System.Xml.Linq")

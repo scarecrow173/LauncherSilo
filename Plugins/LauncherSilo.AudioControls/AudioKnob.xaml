@@ -17,11 +17,10 @@
                  Height="{Binding CircleDiameter, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}"  Width="{Binding CircleDiameter, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}" 
                  Fill="{Binding BackgroundBrush, FallbackValue=LightGray, RelativeSource={RelativeSource AncestorType=UserControl}}"
                  MouseWheel="OuterCircle_MouseWheel" 
-                 MouseDown="OuterCircle_MouseDown" 
+                 MouseLeftButtonDown="OuterCircle_MouseLeftButtonDown"
+                 MouseLeftButtonUp="OuterCircle_MouseLeftButtonUp"
                  MouseMove="OuterCircle_MouseMove" 
-                 MouseUp="OuterCircle_MouseUp" 
-                 LostMouseCapture="OuterCircle_LostMouseCapture"
-                 MouseLeftButtonDown="OuterCircle_MouseLeftButtonDown">
+                 LostMouseCapture="OuterCircle_LostMouseCapture">
             <Ellipse.Style>
                 <Style TargetType="{x:Type Ellipse}">
                     <Setter Property="Fill" Value="{Binding BackgroundBrush, FallbackValue=LightGray, RelativeSource={RelativeSource AncestorType=UserControl}}" />
