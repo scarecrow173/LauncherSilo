@@ -68,7 +68,7 @@ namespace LauncherSilo.AudioControls
             get { return (Brush)GetValue(AccentBrushProperty); }
             set { SetValue(AccentBrushProperty, value); }
         }
-        public static readonly DependencyProperty CircleDiameterProperty = DependencyProperty.Register("CircleDiameter", typeof(double), typeof(AudioKnob), new PropertyMetadata(100.0));
+        public static readonly DependencyProperty CircleDiameterProperty = DependencyProperty.Register("CircleDiameter", typeof(double), typeof(AudioKnob), new PropertyMetadata(80.0));
         private double CircleDiameter
         {
             get { return (double)GetValue(CircleDiameterProperty); }
@@ -79,6 +79,12 @@ namespace LauncherSilo.AudioControls
         {
             get { return (double)GetValue(AngleDiameterProperty); }
             set { SetValue(AngleDiameterProperty, value); }
+        }
+        public static readonly DependencyProperty GaugeDiameterProperty = DependencyProperty.Register("GaugeDiameter", typeof(double), typeof(AudioKnob), new PropertyMetadata(100.0));
+        private double GaugeDiameter
+        {
+            get { return (double)GetValue(GaugeDiameterProperty); }
+            set { SetValue(GaugeDiameterProperty, value); }
         }
         public static readonly DependencyProperty AngleMarginProperty = DependencyProperty.Register("AngleMargin", typeof(Thickness), typeof(AudioKnob), new PropertyMetadata(new Thickness(0,0,0,80)));
         private Thickness AngleMargin
@@ -102,7 +108,7 @@ namespace LauncherSilo.AudioControls
         private RotateTransform _knobAngleRotate = new RotateTransform();
         private bool _isMouseDown = false;
         private Cursor _previousCursor = Cursors.None;
-        private Point _previousMousePosition = new Point();
+        private System.Drawing.Point _previousMousePosition = new System.Drawing.Point();
         private double _mouseMoveThreshold = 5;
 
         public AudioKnob()
@@ -130,7 +136,7 @@ namespace LauncherSilo.AudioControls
             _isMouseDown = true;
             _previousCursor = Cursor;
             Cursor = Cursors.None;
-            _previousMousePosition = e.GetPosition((Ellipse)sender);
+            _previousMousePosition = System.Windows.Forms.Cursor.Position;
         }
 
         private void OuterCircle_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -147,13 +153,12 @@ namespace LauncherSilo.AudioControls
         {
             if (_isMouseDown)
             {
-                Point newMousePosition = e.GetPosition((Ellipse)sender);
+                System.Drawing.Point newMousePosition = System.Windows.Forms.Cursor.Position;
                 double dY = (_previousMousePosition.Y - newMousePosition.Y);
                 if (Math.Abs(dY) > _mouseMoveThreshold)
                 {
                     Value += Math.Sign(dY) * Interval;
-                    Point MousePos = PointToScreen(_previousMousePosition);
-                    System.Windows.Forms.Cursor.Position = new System.Drawing.Point((int)MousePos.X, (int)MousePos.Y);
+                    System.Windows.Forms.Cursor.Position = _previousMousePosition;
                 }
             }
         }
@@ -176,14 +181,15 @@ namespace LauncherSilo.AudioControls
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                double diameter = Math.Min(ActualHeight, ActualWidth);
-                CircleDiameter = diameter;
+                GaugeDiameter = Math.Min(ActualHeight, ActualWidth);
+                CircleDiameter = GaugeDiameter * 0.8;
 
-                double knob_margin = diameter * 0.6;
-                AngleDiameter = diameter * 0.1;
+                double knob_margin = GaugeDiameter * 0.6;
+                AngleDiameter = GaugeDiameter * 0.1;
                 AngleMargin = new Thickness(0, 0, 0, knob_margin);
                 double CenterY = ((knob_margin / AngleDiameter) * 0.5) + 0.5;
                 AngleOffset = new Point(0.5, CenterY);
+
                 Update();
             }));
 

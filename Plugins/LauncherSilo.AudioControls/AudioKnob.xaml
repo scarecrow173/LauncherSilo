@@ -12,9 +12,10 @@
              VerticalAlignment="Stretch" VerticalContentAlignment="Stretch"
              HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
              Loaded="UserControl_Loaded">
-    <Grid SizeChanged="Grid_SizeChanged">
+    <Grid SizeChanged="Grid_SizeChanged" Height="{Binding GaugeDiameter, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}"  Width="{Binding GaugeDiameter, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}">
         <Ellipse HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                 Height="{Binding CircleDiameter, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}"  Width="{Binding CircleDiameter, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                 Height="{Binding CircleDiameter, FallbackValue='80', RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                 Width="{Binding CircleDiameter, FallbackValue='80', RelativeSource={RelativeSource AncestorType=UserControl}}" 
                  Fill="{Binding BackgroundBrush, FallbackValue=LightGray, RelativeSource={RelativeSource AncestorType=UserControl}}"
                  MouseWheel="OuterCircle_MouseWheel" 
                  MouseLeftButtonDown="OuterCircle_MouseLeftButtonDown"
