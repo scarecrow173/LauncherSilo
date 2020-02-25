@@ -12,7 +12,8 @@
                 Height="{Binding Length, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}" 
                 Background="{Binding BackgroundBrush, FallbackValue=LightGray, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 Opacity="0.6" VerticalAlignment="Bottom" 
-                CornerRadius="{Binding BackgroundCornerRadius, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                CornerRadius="{Binding BackgroundCornerRadius, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}" >
+        </Border>
         <Border Width="{Binding InnerSize, FallbackValue='10', RelativeSource={RelativeSource AncestorType=UserControl}}"
                 Height="{Binding Length, FallbackValue='100', RelativeSource={RelativeSource AncestorType=UserControl}}"
                 Background="{Binding BackgroundBrush, FallbackValue=LightGray, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -48,8 +49,9 @@
                                         >
                                         <Border VerticalAlignment="Center" Height="2" Width="15" BorderThickness="1"
                                             BorderBrush="{Binding AccentBrush, FallbackValue=White, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                                            Background="{Binding AccentBrush, FallbackValue=Black, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                                            CornerRadius="1"/>
+                                            Background="{Binding AccentBrush, FallbackValue=White, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                            CornerRadius="1">
+                                        </Border>
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>

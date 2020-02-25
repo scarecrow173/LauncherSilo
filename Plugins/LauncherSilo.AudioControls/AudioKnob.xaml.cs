@@ -20,7 +20,7 @@ namespace LauncherSilo.AudioControls
     /// </summary>
     public partial class AudioKnob : UserControl
     {
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(AudioKnob), new PropertyMetadata((double)50.0, ValuePropertyChanged, ValuePropertyCoerce));
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(AudioKnob), new FrameworkPropertyMetadata((double)50.0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, ValuePropertyChanged, ValuePropertyCoerce));
         public double Value
         {
             get { return (double)GetValue(ValueProperty); }
@@ -213,16 +213,14 @@ namespace LauncherSilo.AudioControls
 
         private static void ValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            AudioKnob control = d as AudioKnob;
-            if (control != null)
+            if (d is AudioKnob control)
             {
                 control.Update();
             }
         }
         private static object ValuePropertyCoerce(DependencyObject d, object baseValue)
         {
-            AudioKnob control = d as AudioKnob;
-            if (control != null)
+            if (d is AudioKnob control)
             {
                 double NewValue = (double)baseValue;
                 if (NewValue >= control.Maximum)
@@ -238,32 +236,28 @@ namespace LauncherSilo.AudioControls
         }
         private static void MaximumPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            AudioKnob control = d as AudioKnob;
-            if (control != null)
+            if (d is AudioKnob control)
             {
                 control.Update();
             }
         }
         private static object MaximumPropertyCoerce(DependencyObject d, object baseValue)
         {
-            AudioKnob control = d as AudioKnob;
-            if (control != null)
+            if (d is AudioKnob control)
             {
             }
             return baseValue;
         }
         private static void MinimumPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            AudioKnob control = d as AudioKnob;
-            if (control != null)
+            if (d is AudioKnob control)
             {
                 control.Update();
             }
         }
         private static object MinimumPropertyCoerce(DependencyObject d, object baseValue)
         {
-            AudioKnob control = d as AudioKnob;
-            if (control != null)
+            if (d is AudioKnob control)
             {
 
             }

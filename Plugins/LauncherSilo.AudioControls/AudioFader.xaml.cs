@@ -21,7 +21,7 @@ namespace LauncherSilo.AudioControls
     /// </summary>
     public partial class AudioFader : UserControl
     {
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(AudioFader), new PropertyMetadata((double)50.0, ValuePropertyChanged, ValuePropertyCoerce));
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(AudioFader), new FrameworkPropertyMetadata((double)50.0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, ValuePropertyChanged, ValuePropertyCoerce));
         public double Value
         {
             get { return (double)GetValue(ValueProperty); }

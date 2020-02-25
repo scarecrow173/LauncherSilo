@@ -161,16 +161,14 @@ namespace LauncherSilo.AudioControls
         }
         private static void ValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            AudioMeter control = d as AudioMeter;
-            if (control != null)
+            if (d is AudioMeter control)
             {
                 control.Update();
             }
         }
         private static object ValuePropertyCoerce(DependencyObject d, object baseValue)
         {
-            AudioMeter control = d as AudioMeter;
-            if (control != null)
+            if (d is AudioMeter control)
             {
                 double NewValue = (double)baseValue;
                 if (NewValue >= control.Maximum)
@@ -186,32 +184,28 @@ namespace LauncherSilo.AudioControls
         }
         private static void MaximumPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            AudioMeter control = d as AudioMeter;
-            if (control != null)
+            if (d is AudioMeter control)
             {
                 control.Update();
             }
         }
         private static object MaximumPropertyCoerce(DependencyObject d, object baseValue)
         {
-            AudioMeter control = d as AudioMeter;
-            if (control != null)
+            if (d is AudioMeter control)
             {
             }
             return baseValue;
         }
         private static void MinimumPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            AudioMeter control = d as AudioMeter;
-            if (control != null)
+            if (d is AudioMeter control)
             {
                 control.Update();
             }
         }
         private static object MinimumPropertyCoerce(DependencyObject d, object baseValue)
         {
-            AudioMeter control = d as AudioMeter;
-            if (control != null)
+            if (d is AudioMeter control)
             {
 
             }
@@ -219,23 +213,20 @@ namespace LauncherSilo.AudioControls
         }
         private static void OrientationPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            AudioMeter control = d as AudioMeter;
-            if (control != null)
+            if (d is AudioMeter control)
             {
 
             }
         }
         private static void ColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            AudioMeter control = d as AudioMeter;
-            if (control != null)
+            if (d is AudioMeter control)
             {
             }
         }
         private static void HighlightPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            AudioMeter control = d as AudioMeter;
-            if (control != null)
+            if (d is AudioMeter control)
             {
             }
         }
