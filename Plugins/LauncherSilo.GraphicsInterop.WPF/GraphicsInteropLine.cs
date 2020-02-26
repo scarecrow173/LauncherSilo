@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace LauncherSilo.GraphicsInterop.WPF
 {
-    public class GraphicsInteropLine : GraphicsInteropContentElement
+    public class GraphicsInteropLine : GraphicsInteropElement
     {
+        public override void OnRender(RenderFrame renderFrame)
+        {
+
+        }
     }
 }

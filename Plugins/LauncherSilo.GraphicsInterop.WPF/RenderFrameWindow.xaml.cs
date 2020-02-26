@@ -54,7 +54,7 @@ namespace LauncherSilo.GraphicsInterop.WPF
                 //renderFrame.DisplayHandle = Handle;
                 renderFrame.Initialize();
                 TargetImage.Source = imageSource;
-                BackgroundColor = SharpDX.Color.White;//Interop.MediaColorToNativeColor((Background as SolidColorBrush).Color);
+                BackgroundColor = Interop.MediaColorToNativeColor((Background as SolidColorBrush).Color);
 
                 Clear = renderFrame.CreateDrawCommnad2D<Clear2DCommand>();
                 Clear.clearColor = BackgroundColor;
@@ -101,12 +101,6 @@ namespace LauncherSilo.GraphicsInterop.WPF
             renderFrame.PushDrawCommand(FillEllipse);
             renderFrame.PushDrawCommand(DrawLine);
             renderFrame.FlushDrawCommand();
-            //renderFrame._renderTarget2D.BeginDraw();
-            //renderFrame._renderTarget2D.Clear(SharpDX.Color.White);
-            //renderFrame._renderTarget2D.DrawEllipse(DrawEllipse.ellipse, DrawEllipse.brush);
-            //renderFrame._renderTarget2D.FillEllipse(DrawEllipse.ellipse, DrawEllipse.brush);
-            //renderFrame._renderTarget2D.EndDraw();
-            //renderFrame.Controller._dx11Device.ImmediateContext.Flush();
             imageSource.Invalidate();
         }
 

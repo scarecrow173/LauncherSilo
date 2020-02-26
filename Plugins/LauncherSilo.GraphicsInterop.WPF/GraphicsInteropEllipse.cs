@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace LauncherSilo.GraphicsInterop.WPF
 {
-    public class GraphicsInteropEllipse : GraphicsInteropContentElement
+    public class GraphicsInteropEllipse : GraphicsInteropElement
     {
+        public override void OnRender(RenderFrame renderFrame)
+        {
+
+        }
     }
 }

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace LauncherSilo.GraphicsInterop.WPF
 {
-    public class GraphicsInteropCanvas : GraphicsInteropElement
+    public class GraphicsInteropCanvas : GraphicsInteropPanel
     {
+
     }
 }
