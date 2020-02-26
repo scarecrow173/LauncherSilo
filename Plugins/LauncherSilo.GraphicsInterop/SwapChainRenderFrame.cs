@@ -29,9 +29,14 @@ namespace LauncherSilo.GraphicsInterop
                 SwapEffect = SwapEffect.Discard,
                 Usage = Usage.RenderTargetOutput
             };
-            SwapChain = _controller.CreateSwapChain(desc);
+            SwapChain = Controller.CreateSwapChain(desc);
             return Texture2D.FromSwapChain<Texture2D>(SwapChain, 0);
 
+        }
+        public override void FlushDrawCommand()
+        {
+            base.FlushDrawCommand();
+            SwapChain?.Present(0, PresentFlags.None);
         }
     }
 }

@@ -25,7 +25,12 @@ namespace LauncherSilo.GraphicsInterop
                 CpuAccessFlags = CpuAccessFlags.None,
                 ArraySize = 1
             };
-            return _controller.CreateTexture2D(renderDesc);
+            return Controller.CreateTexture2D(renderDesc);
+        }
+        public override void FlushDrawCommand()
+        {
+            base.FlushDrawCommand();
+            Controller.ContextFlush();
         }
     }
 }
