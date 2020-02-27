@@ -11,6 +11,10 @@
                     <Grid Background="{TemplateBinding Background}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <local:GraphicsInteropImage
                             x:Name="PART_Canvas"
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}"
+                            MinWidth="1"
+                            MinHeight="1"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             DataContext="{TemplateBinding DataContext}" />

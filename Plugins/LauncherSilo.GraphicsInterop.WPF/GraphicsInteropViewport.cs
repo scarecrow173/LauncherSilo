@@ -14,7 +14,7 @@ namespace LauncherSilo.GraphicsInterop.WPF
     [TemplatePart(Name = "PART_Canvas", Type = typeof(GraphicsInteropImage))]
     public class GraphicsInteropViewport : Control
     {
-        public GraphicsInteropElement Content { get; }
+        public GraphicsInteropElement Content { get; set; }
         private GraphicsInteropImage ControlImage { get; set; }
         private Clear2DCommand Clear = null;
         static GraphicsInteropViewport()
@@ -29,6 +29,13 @@ namespace LauncherSilo.GraphicsInterop.WPF
 
         private void GraphicsInteropViewport_Loaded(object sender, RoutedEventArgs e)
         {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                ControlImage.Width = (int)ActualWidth;
+                ControlImage.Height = (int)ActualHeight;
+                InvalidateVisual();
+            }));
+
         }
 
         private void GraphicsInteropViewport_Unloaded(object sender, RoutedEventArgs e)

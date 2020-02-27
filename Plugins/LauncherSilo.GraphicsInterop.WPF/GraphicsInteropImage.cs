@@ -51,10 +51,16 @@ namespace LauncherSilo.GraphicsInterop.WPF
             {
                 return;
             }
-            Renderframe.RenderTargetChanged += RenderFrame_RenderTargetChanged; ;
-            Renderframe.Initialize();
-            Source = imageSource;
-            System.Windows.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                Renderframe.Height = (int)DesiredSize.Height;
+                Renderframe.Width = (int)DesiredSize.Width;
+                Renderframe.RenderTargetChanged += RenderFrame_RenderTargetChanged;
+                Renderframe.Initialize();
+                Source = imageSource;
+                System.Windows.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
+            }));
+
         }
 
         private void GraphicsInteropImage_Unloaded(object sender, RoutedEventArgs e)
