@@ -32,7 +32,6 @@ namespace LauncherSilo.GraphicsInterop.WPF
 
 
         private GraphicsInteropImageSource imageSource = new GraphicsInteropImageSource();
-        private Clear2DCommand clear = null;
 
         static GraphicsInteropImage()
         {
@@ -43,6 +42,7 @@ namespace LauncherSilo.GraphicsInterop.WPF
             base.Loaded += GraphicsInteropImage_Loaded;
             base.Unloaded += GraphicsInteropImage_Unloaded;
             base.Stretch = System.Windows.Media.Stretch.Fill;
+            SizeChanged += GraphicsInteropImage_SizeChanged;
         }
 
         private void GraphicsInteropImage_Loaded(object sender, RoutedEventArgs e)
@@ -51,19 +51,10 @@ namespace LauncherSilo.GraphicsInterop.WPF
             {
                 return;
             }
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                Renderframe.Height = (int)100;
-                Renderframe.Width = (int)100;
-                Renderframe.RenderTargetChanged += RenderFrame_RenderTargetChanged; ;
-                Renderframe.Initialize();
-                Source = imageSource;
-                clear = Renderframe.CreateDrawCommnad2D<Clear2DCommand>();
-                clear.clearColor = SharpDX.Color.White;
-
-                SizeChanged += GraphicsInteropImage_SizeChanged;
-                System.Windows.Media.CompositionTarget.Rendering += CompositionTarget_Rendering; ;
-            }));
+            Renderframe.RenderTargetChanged += RenderFrame_RenderTargetChanged; ;
+            Renderframe.Initialize();
+            Source = imageSource;
+            System.Windows.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
         private void GraphicsInteropImage_Unloaded(object sender, RoutedEventArgs e)
@@ -85,7 +76,6 @@ namespace LauncherSilo.GraphicsInterop.WPF
         }
         private void CompositionTarget_Rendering(object sender, EventArgs e)
         {
-            Renderframe.PushDrawCommand(clear);
             OnRenderNative?.Invoke(this, new OnRenderNativeArgs(Renderframe));
             Renderframe.FlushDrawCommand();
             imageSource.Invalidate();

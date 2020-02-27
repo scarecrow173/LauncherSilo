@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
 
@@ -12,41 +13,24 @@ namespace LauncherSilo.GraphicsInterop.WPF
     public class GraphicsInteropPanel : GraphicsInteropElement
     {
         public ObservableCollection<GraphicsInteropElement> Children { get; } = new ObservableCollection<GraphicsInteropElement>();
-        private GraphicsInteropImage image = null;
 
         public GraphicsInteropPanel()
         {
             Children.CollectionChanged += Children_CollectionChanged;
             Loaded += GraphicsInteropPanel_Loaded;
             Unloaded += GraphicsInteropPanel_Unloaded;
-            
         }
         private void GraphicsInteropPanel_Loaded(object sender, RoutedEventArgs e)
         {
             RenderFrame ParentRenderfarame = FindParentRenderFrame();
             if (ParentRenderfarame == null)
             {
-                image = new GraphicsInteropImage();
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    image.Width = ActualWidth;
-                    image.Height = ActualHeight;
-                    image.OnRenderNative += Image_OnRenderNative;
-                    Renderframe = image.Renderframe;
-                    AddLogicalChild(image);
-                    AddVisualChild(image);
-                    Measure(new Size(ActualWidth, ActualHeight));
-                    image.Measure(new Size(ActualWidth, ActualHeight));
-                    InvalidateVisual();
-                    image.InvalidateArrange();
-                    image.InvalidateMeasure();
-                    image.InvalidateVisual();
 
                 }));
             }
         }
-
-
 
         private void GraphicsInteropPanel_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -86,10 +70,6 @@ namespace LauncherSilo.GraphicsInterop.WPF
                     }
                 }
             }
-        }
-        private void Image_OnRenderNative(object sender, OnRenderNativeArgs e)
-        {
-            OnRender(e.Renderframe);
         }
         public override void OnRender(RenderFrame renderFrame)
         {

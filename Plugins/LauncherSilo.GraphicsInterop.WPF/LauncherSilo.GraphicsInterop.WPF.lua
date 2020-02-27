@@ -41,7 +41,8 @@ project "LauncherSilo.GraphicsInterop.WPF"
     filter { "configurations:Release" }
         defines { "NDEBUG" }
         optimize "On"
-
+    filter {"files:Themes/**.xaml"}
+        buildaction "Page"
     filter {"files:**.ico" }
         buildaction "Resource"
     filter {"files:**.png" }
