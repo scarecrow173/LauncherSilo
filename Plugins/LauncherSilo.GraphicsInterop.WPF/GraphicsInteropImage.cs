@@ -3,10 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace LauncherSilo.GraphicsInterop.WPF
 {
+    public class OnRenderNativeArgs : EventArgs
+    {
+        public RenderFrame Renderframe { get; private set; }
+        public OnRenderNativeArgs(RenderFrame renderframe)
+        {
+            Renderframe = renderframe;
+        }
+    }
     public class GraphicsInteropImage : System.Windows.Controls.Image
     {
         public bool IsInDesignMode
@@ -18,14 +27,22 @@ namespace LauncherSilo.GraphicsInterop.WPF
                 return isDesignMode;
             }
         }
-        private OffscreenRenderFrame renderFrame = new OffscreenRenderFrame();
-        private GraphicsInteropImageSource imageSource = new GraphicsInteropImageSource();
+        public OffscreenRenderFrame Renderframe { get; set; } = new OffscreenRenderFrame();
+        public event EventHandler<OnRenderNativeArgs> OnRenderNative;
 
+
+        private GraphicsInteropImageSource imageSource = new GraphicsInteropImageSource();
+        private Clear2DCommand clear = null;
+
+        static GraphicsInteropImage()
+        {
+            StretchProperty.OverrideMetadata(typeof(GraphicsInteropImage), new FrameworkPropertyMetadata(Stretch.Fill));
+        }
         public GraphicsInteropImage()
         {
-            Loaded += GraphicsInteropImage_Loaded;
-            Unloaded += GraphicsInteropImage_Unloaded;
-            Stretch = System.Windows.Media.Stretch.Fill;
+            base.Loaded += GraphicsInteropImage_Loaded;
+            base.Unloaded += GraphicsInteropImage_Unloaded;
+            base.Stretch = System.Windows.Media.Stretch.Fill;
         }
 
         private void GraphicsInteropImage_Loaded(object sender, RoutedEventArgs e)
@@ -36,13 +53,16 @@ namespace LauncherSilo.GraphicsInterop.WPF
             }
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                renderFrame.Height = (int)ActualHeight;
-                renderFrame.Width = (int)ActualWidth;
-                renderFrame.RenderTargetChanged += RenderFrame_RenderTargetChanged; ;
-                renderFrame.Initialize();
+                Renderframe.Height = (int)100;
+                Renderframe.Width = (int)100;
+                Renderframe.RenderTargetChanged += RenderFrame_RenderTargetChanged; ;
+                Renderframe.Initialize();
                 Source = imageSource;
-                SizeChanged += GraphicsInteropImage_SizeChanged;
+                clear = Renderframe.CreateDrawCommnad2D<Clear2DCommand>();
+                clear.clearColor = SharpDX.Color.White;
 
+                SizeChanged += GraphicsInteropImage_SizeChanged;
+                System.Windows.Media.CompositionTarget.Rendering += CompositionTarget_Rendering; ;
             }));
         }
 
@@ -60,8 +80,21 @@ namespace LauncherSilo.GraphicsInterop.WPF
         }
         private void GraphicsInteropImage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            renderFrame.Height = (int)ActualHeight;
-            renderFrame.Width = (int)ActualWidth;
+            Renderframe.Height = (int)ActualHeight;
+            Renderframe.Width = (int)ActualWidth;
         }
+        private void CompositionTarget_Rendering(object sender, EventArgs e)
+        {
+            Renderframe.PushDrawCommand(clear);
+            OnRenderNative?.Invoke(this, new OnRenderNativeArgs(Renderframe));
+            Renderframe.FlushDrawCommand();
+            imageSource.Invalidate();
+        }
+
+        protected override void OnRender(DrawingContext dc)
+        {
+            base.OnRender(dc);
+        }
+
     }
 }

@@ -12,9 +12,7 @@ namespace LauncherSilo.GraphicsInterop.WPF
     public class GraphicsInteropPanel : GraphicsInteropElement
     {
         public ObservableCollection<GraphicsInteropElement> Children { get; } = new ObservableCollection<GraphicsInteropElement>();
-        private GraphicsInteropImageSource imageSource = null;
-        private System.Windows.Controls.Image image = null;
-        private Clear2DCommand Clear = null;
+        private GraphicsInteropImage image = null;
 
         public GraphicsInteropPanel()
         {
@@ -28,43 +26,31 @@ namespace LauncherSilo.GraphicsInterop.WPF
             RenderFrame ParentRenderfarame = FindParentRenderFrame();
             if (ParentRenderfarame == null)
             {
+                image = new GraphicsInteropImage();
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    Renderframe = new OffscreenRenderFrame();
-                    Renderframe.Height = (int)ActualHeight;
-                    Renderframe.Width = (int)ActualWidth;
-                    Renderframe.RenderTargetChanged += Renderframe_RenderTargetChanged;
-                    Renderframe.Initialize();
-                    Clear = Renderframe.CreateDrawCommnad2D<Clear2DCommand>();
-                    Clear.clearColor = SharpDX.Color.White;
-                    image = new System.Windows.Controls.Image();
                     image.Width = ActualWidth;
                     image.Height = ActualHeight;
-                    imageSource = new GraphicsInteropImageSource();
-                    image.Source = imageSource;
-                    SizeChanged += GraphicsInteropPanel_SizeChanged;
-                    System.Windows.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
+                    image.OnRenderNative += Image_OnRenderNative;
+                    Renderframe = image.Renderframe;
+                    AddLogicalChild(image);
+                    AddVisualChild(image);
+                    Measure(new Size(ActualWidth, ActualHeight));
+                    image.Measure(new Size(ActualWidth, ActualHeight));
+                    InvalidateVisual();
+                    image.InvalidateArrange();
+                    image.InvalidateMeasure();
+                    image.InvalidateVisual();
+
                 }));
             }
         }
+
+
+
         private void GraphicsInteropPanel_Unloaded(object sender, RoutedEventArgs e)
         {
 
-        }
-        private void Renderframe_RenderTargetChanged(object sender, RenderTargetChanageArgs e)
-        {
-            if (imageSource != null)
-            {
-                imageSource.SetSurface(e.RenderTargetTexture);
-            }
-        }
-        private void GraphicsInteropPanel_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (Renderframe != null)
-            {
-                Renderframe.Height = (int)e.NewSize.Height;
-                Renderframe.Width = (int)e.NewSize.Width;
-            }
         }
         private void Children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -101,22 +87,16 @@ namespace LauncherSilo.GraphicsInterop.WPF
                 }
             }
         }
-        private void CompositionTarget_Rendering(object sender, EventArgs e)
+        private void Image_OnRenderNative(object sender, OnRenderNativeArgs e)
         {
-            if (Renderframe != null)
-            {
-                OnRender(Renderframe);
-            }
+            OnRender(e.Renderframe);
         }
         public override void OnRender(RenderFrame renderFrame)
         {
-            Renderframe?.PushDrawCommand(Clear);
             foreach (GraphicsInteropElement Child in Children)
             {
                 Child.OnRender(renderFrame);
             }
-            Renderframe?.FlushDrawCommand();
-            imageSource?.Invalidate();
         }
     }
 }
