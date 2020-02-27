@@ -75,6 +75,10 @@ namespace LauncherSilo.AudioControllerPlugin
             {
                 return Math.Round(_Peek * 100.0);
             }
+            set
+            {
+
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
