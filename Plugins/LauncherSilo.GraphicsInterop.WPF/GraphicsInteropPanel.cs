@@ -22,14 +22,6 @@ namespace LauncherSilo.GraphicsInterop.WPF
         }
         private void GraphicsInteropPanel_Loaded(object sender, RoutedEventArgs e)
         {
-            RenderFrame ParentRenderfarame = FindParentRenderFrame();
-            if (ParentRenderfarame == null)
-            {
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-
-                }));
-            }
         }
 
         private void GraphicsInteropPanel_Unloaded(object sender, RoutedEventArgs e)
@@ -71,6 +63,14 @@ namespace LauncherSilo.GraphicsInterop.WPF
                 }
             }
         }
+        public override void OnPrepareRender(RenderFrame renderFrame)
+        {
+            foreach (GraphicsInteropElement Child in Children)
+            {
+                Child.OnPrepareRender(renderFrame);
+            }
+        }
+
         public override void OnRender(RenderFrame renderFrame)
         {
             foreach (GraphicsInteropElement Child in Children)

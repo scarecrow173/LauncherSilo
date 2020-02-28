@@ -24,6 +24,7 @@ namespace LauncherSilo.GraphicsInterop.WPF
                 SetValue(BackgroundProperty, value);
             }
         }
+        public abstract void OnPrepareRender(RenderFrame renderFrame);
         public abstract void OnRender(RenderFrame renderFrame);
         
     }

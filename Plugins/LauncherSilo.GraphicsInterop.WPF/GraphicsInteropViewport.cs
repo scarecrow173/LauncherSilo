@@ -51,6 +51,7 @@ namespace LauncherSilo.GraphicsInterop.WPF
         }
         private void ControlImage_OnRenderNative(object sender, OnRenderNativeArgs e)
         {
+            Content?.OnPrepareRender(ControlImage.Renderframe);
             ControlImage.Renderframe.PushDrawCommand(Clear);
             Content?.OnRender(ControlImage.Renderframe);
         }
