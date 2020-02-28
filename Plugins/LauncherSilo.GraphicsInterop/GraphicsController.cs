@@ -67,6 +67,10 @@ namespace LauncherSilo.GraphicsInterop
         {
             _renderTarget = renderTarget;
         }
+        public RenderTarget GetRenderTarget()
+        {
+            return _renderTarget;
+        }
         public void ContextFlush()
         {
             _dx11Device?.ImmediateContext?.Flush();
@@ -75,6 +79,11 @@ namespace LauncherSilo.GraphicsInterop
         {
             return new SolidColorBrush(_renderTarget, color);
         }
+        public SharpDX.Direct2D1.StrokeStyle CreateStrokeStyle(StrokeStyleProperties props)
+        {
+            return new SharpDX.Direct2D1.StrokeStyle(_renderTarget.Factory, props);
+        }
+
         public void BeginDraw() => _renderTarget?.BeginDraw();
         public void Clear(RawColor4? clearColor) => _renderTarget?.Clear(clearColor);
         public void DrawBitmap(Bitmap bitmap, float opacity, BitmapInterpolationMode interpolationMode, RawRectangleF sourceRectangle) => _renderTarget?.DrawBitmap(bitmap, opacity, interpolationMode, sourceRectangle);
