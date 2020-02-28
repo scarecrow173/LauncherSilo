@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace LauncherSilo.GraphicsInterop.WPF
 {
-    public class GraphicsInteropRectangle : GraphicsInteropPrimitiveElement
+    public class GraphicsInteropRectangle : GraphicsInteropFillableElement
     {
         public static readonly DependencyProperty LeftProperty = DependencyProperty.Register("Left", typeof(double), typeof(GraphicsInteropEllipse), new PropertyMetadata(0.0, OtherPropertyChanged));
         public double Left
@@ -39,6 +39,7 @@ namespace LauncherSilo.GraphicsInterop.WPF
         }
 
         private DrawRectangle2DCommand _drawRectangle = null;
+        private FillRectangle2DCommand _fillRectangle = null;
         public override void OnPrepareRender(RenderFrame renderFrame)
         {
             if (_drawRectangle == null)
@@ -74,14 +75,42 @@ namespace LauncherSilo.GraphicsInterop.WPF
                 _drawRectangle.strokeWidth = (float)StrokeWidth;
                 _isStrokeWidthChanged = false;
             }
+            if (_fillRectangle == null && FillBrush != null)
+            {
+                _fillRectangle = renderFrame.CreateDrawCommnad2D<FillRectangle2DCommand>();
+                _isFillBrushChanged = true;
+            }
+            if (_isFillBrushChanged)
+            {
+                if (_fillRectangle != null)
+                {
+                    if (FillBrush != null)
+                    {
+                        _fillRectangle.brush = FillBrush.ToNativeBrush(renderFrame);
+                    }
+                    else
+                    {
+                        _fillRectangle = null;
+                    }
+                }
+                _isFillBrushChanged = false;
+            }
             if (_isOtherPropertyChanged)
             {
                 _drawRectangle.rect = new SharpDX.Mathematics.Interop.RawRectangleF((float)Left, (float)Top, (float)Right, (float)Bottom);
+                if (_fillRectangle != null)
+                {
+                    _fillRectangle.rect = _drawRectangle.rect;
+                }
                 _isOtherPropertyChanged = false;
             }
         }
         public override void OnRender(RenderFrame renderFrame)
         {
+            if (_fillRectangle != null)
+            {
+                renderFrame.PushDrawCommand(_fillRectangle);
+            }
             renderFrame.PushDrawCommand(_drawRectangle);
         }
 

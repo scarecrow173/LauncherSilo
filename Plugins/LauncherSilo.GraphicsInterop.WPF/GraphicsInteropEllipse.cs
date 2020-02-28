@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace LauncherSilo.GraphicsInterop.WPF
 {
-    public class GraphicsInteropEllipse : GraphicsInteropPrimitiveElement
+    public class GraphicsInteropEllipse : GraphicsInteropFillableElement
     {
         public static readonly DependencyProperty CenterProperty = DependencyProperty.Register("Center", typeof(Point), typeof(GraphicsInteropEllipse), new PropertyMetadata(new Point(0, 0), OtherPropertyChanged));
         public Point Center
@@ -30,6 +30,7 @@ namespace LauncherSilo.GraphicsInterop.WPF
         }
 
         private DrawEllipse2DCommand _drawEllipse = null;
+        private FillEllipse2DCommand _fillEllipse = null;
         public override void OnPrepareRender(RenderFrame renderFrame)
         {
             if (_drawEllipse == null)
@@ -65,15 +66,42 @@ namespace LauncherSilo.GraphicsInterop.WPF
                 _drawEllipse.strokeWidth = (float)StrokeWidth;
                 _isStrokeWidthChanged = false;
             }
+            if (_fillEllipse == null && FillBrush != null)
+            {
+                _fillEllipse = renderFrame.CreateDrawCommnad2D<FillEllipse2DCommand>();
+                _isFillBrushChanged = true;
+            }
+            if (_isFillBrushChanged)
+            {
+                if (_fillEllipse != null)
+                {
+                    if (FillBrush != null)
+                    {
+                        _fillEllipse.brush = FillBrush.ToNativeBrush(renderFrame);
+                    }
+                    else
+                    {
+                        _fillEllipse = null;
+                    }
+                }
+                _isFillBrushChanged = false;
+            }
             if (_isOtherPropertyChanged)
             {
                 _drawEllipse.ellipse = new SharpDX.Direct2D1.Ellipse(Center.ToNativeVector2(), (float)RadiusX, (float)RadiusY);
+                if (_fillEllipse != null)
+                {
+                    _fillEllipse.ellipse = _drawEllipse.ellipse;
+                }
                 _isOtherPropertyChanged = false;
             }
         }
         public override void OnRender(RenderFrame renderFrame)
         {
-
+            if (_fillEllipse != null)
+            {
+                renderFrame.PushDrawCommand(_fillEllipse);
+            }
             renderFrame.PushDrawCommand(_drawEllipse);
         }
 
